@@ -34,16 +34,18 @@
     
     //demonstrate gradient fill
     label3.gradientStartColor = [UIColor redColor];
-    label3.gradientEndColor = [UIColor blueColor];
-    
+    label3.gradientEndColor = [UIColor blackColor];
     
     //everything
     label4.shadowColor = [UIColor blackColor];
-    label4.shadowBlur = 10.0f;
+    label4.shadowOffset = CGSizeZero;
+    label4.shadowBlur = 20.0f;
     label4.innerShadowColor = [UIColor yellowColor];
     label4.innerShadowOffset = CGSizeMake(1.0f, 2.0f);
     label4.gradientStartColor = [UIColor redColor];
     label4.gradientEndColor = [UIColor yellowColor];
+    label4.gradientStartPoint = CGPointMake(0.0f, 0.5f);
+    label4.gradientEndPoint = CGPointMake(1.0f, 0.5f);
 }
 
 - (void)viewDidUnload

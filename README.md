@@ -35,6 +35,14 @@ The starting/upper colour of the gradient. If the alpha component is less than 1
 	
 The ending/lower colour of the gradient. If the alpha componentis less than 1.0, this will be blended with the textColor. See the note about gradient colours below.
 
+	@property (nonatomic, assign) CGPoint gradientStartPoint;
+	
+The starting position of the gradient. The x and y coordinates are in the range 0 to 1, where (0, 0) is the top-left of the text and (1, 1) is the bottom-right. This means that use can use the same settings for multiple strings and the gradient will scale to fit. The default value is (0.5, 0.0), i.e. the top, center.
+
+	@property (nonatomic, assign) CGPoint gradientEndPoint;
+	
+The ending position of the gradient. The x and y coordinates are in the range 0 to 1, where (0, 0) is the top-left of the text and (1, 1) is the bottom-right. This means that use can use the same settings for multiple strings and the gradient will scale to fit. The default value is (0.5, 0.75), which is the center of the baseline for most strings. For string with a lot of descenders (characters that hang below the baseline), you may find that a value of (0.5, 1.0) looks better.
+
 	
 Notes
 ----------------
@@ -45,4 +53,4 @@ FXLabels are slower to draw than UILabels, so be wary of overusing them, especia
 
 FXLabel effects cannot be drawn outside of the bounds of the label view. For labels with large shadowBlur or shadowOffset values, you will need to increase the size of the label frame to prevent the shadow being cropped.
 
-The gradientStartColor and gradientEndColor properties are a bit fussy about which colour types they will accept due to some internal technical details. Colour constants like [UIColor redColor] work fine, but monochromatic colours like [UIColor blackColor] or those produced with [UIColor colorWithWhite:alpha:]  do not. If you need a shade of grey in your gradient, use [UIColor colorWithRed:green:blue:alpha] to create it instead.
+The gradientStartColor and gradientEndColor properties do not support patterned, indexed or HSV colours.
