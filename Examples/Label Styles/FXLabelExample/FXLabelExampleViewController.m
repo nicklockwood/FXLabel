@@ -21,6 +21,7 @@
     [super viewDidLoad];
     
     //demonstrate shadow
+    label1.shadowColor = nil;
     label1.shadowOffset = CGSizeMake(0.0f, 2.0f);
     label1.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.75f];
     label1.shadowBlur = 5.0f;
@@ -46,6 +47,7 @@
     label4.gradientEndColor = [UIColor yellowColor];
     label4.gradientStartPoint = CGPointMake(0.0f, 0.5f);
     label4.gradientEndPoint = CGPointMake(1.0f, 0.5f);
+    label4.oversample = YES;
 }
 
 - (void)viewDidUnload

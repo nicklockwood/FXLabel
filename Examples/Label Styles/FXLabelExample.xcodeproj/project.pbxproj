@@ -16,7 +16,7 @@
 		01FAC1131400668500B63C5B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01FAC1111400668500B63C5B /* MainWindow.xib */; };
 		01FAC1161400668500B63C5B /* FXLabelExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FAC1151400668500B63C5B /* FXLabelExampleViewController.m */; };
 		01FAC1191400668500B63C5B /* FXLabelExampleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01FAC1171400668500B63C5B /* FXLabelExampleViewController.xib */; };
-		01FAC122140066AA00B63C5B /* FXLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FAC121140066AA00B63C5B /* FXLabel.m */; };
+		01FF021B146985FE00765E29 /* FXLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FF021A146985FE00765E29 /* FXLabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,8 +34,8 @@
 		01FAC1141400668500B63C5B /* FXLabelExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FXLabelExampleViewController.h; sourceTree = "<group>"; };
 		01FAC1151400668500B63C5B /* FXLabelExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FXLabelExampleViewController.m; sourceTree = "<group>"; };
 		01FAC1181400668500B63C5B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FXLabelExampleViewController.xib; sourceTree = "<group>"; };
-		01FAC120140066AA00B63C5B /* FXLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXLabel.h; sourceTree = "<group>"; };
-		01FAC121140066AA00B63C5B /* FXLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXLabel.m; sourceTree = "<group>"; };
+		01FF0219146985FE00765E29 /* FXLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXLabel.h; sourceTree = "<group>"; };
+		01FF021A146985FE00765E29 /* FXLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXLabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,7 +55,7 @@
 		01FAC0F01400668500B63C5B = {
 			isa = PBXGroup;
 			children = (
-				01FAC11F1400669500B63C5B /* FXLabel */,
+				01FF0218146985FE00765E29 /* FXLabel */,
 				01FAC1051400668500B63C5B /* FXLabelExample */,
 				01FAC0FE1400668500B63C5B /* Frameworks */,
 				01FAC0FC1400668500B63C5B /* Products */,
@@ -105,14 +105,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		01FAC11F1400669500B63C5B /* FXLabel */ = {
+		01FF0218146985FE00765E29 /* FXLabel */ = {
 			isa = PBXGroup;
 			children = (
-				01FAC120140066AA00B63C5B /* FXLabel.h */,
-				01FAC121140066AA00B63C5B /* FXLabel.m */,
+				01FF0219146985FE00765E29 /* FXLabel.h */,
+				01FF021A146985FE00765E29 /* FXLabel.m */,
 			);
 			name = FXLabel;
-			path = ../FXLabel;
+			path = ../../FXLabel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,6 +140,9 @@
 /* Begin PBXProject section */
 		01FAC0F21400668500B63C5B /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = 01FAC0F51400668500B63C5B /* Build configuration list for PBXProject "FXLabelExample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -178,7 +181,7 @@
 				01FAC10C1400668500B63C5B /* main.m in Sources */,
 				01FAC1101400668500B63C5B /* FXLabelExampleAppDelegate.m in Sources */,
 				01FAC1161400668500B63C5B /* FXLabelExampleViewController.m in Sources */,
-				01FAC122140066AA00B63C5B /* FXLabel.m in Sources */,
+				01FF021B146985FE00765E29 /* FXLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +263,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FXLabelExample/FXLabelExample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "FXLabelExample/FXLabelExample-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -271,6 +275,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FXLabelExample/FXLabelExample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "FXLabelExample/FXLabelExample-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

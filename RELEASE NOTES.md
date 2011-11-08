@@ -1,3 +1,8 @@
+Version 1.2
+
+- Added oversample property to improve drawing quality for some effects.
+- Fixed issue where labels without any effects or shadow were not drawn.
+
 Version 1.1
 
 - Added gradientStartPoint and gradientEndPoint properties.

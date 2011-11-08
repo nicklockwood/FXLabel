@@ -6,6 +6,16 @@ The standard iOS UILabel is fairly limited in terms of visual customisation; You
 FXLabel improves upon the standard UILabel by providing a subclass that supports soft shadows, inner shadow and gradient fill, and which can easily be used in place of any standard UILabel.
 
 
+Supported iOS & SDK Versions
+-----------------------------
+
+* Supported build target - iOS 5.0 (Xcode 4.2)
+* Earliest supported deployment target - iOS 4.0 (Xcode 4.2)
+* Earliest compatible deployment target - iOS 3.0
+
+NOTE: 'Supported' means that the library has been tested with this version. 'Compatible' means that the library should work on this iOS version (i.e. it doesn't rely on any unavailable SDK features) but is no longer being tested for compatibility and may require tweaking or bug fixes to run correctly.
+
+
 Installation
 ---------------
 
@@ -42,6 +52,10 @@ The starting position of the gradient. The x and y coordinates are in the range 
 	@property (nonatomic, assign) CGPoint gradientEndPoint;
 	
 The ending position of the gradient. The x and y coordinates are in the range 0 to 1, where (0, 0) is the top-left of the text and (1, 1) is the bottom-right. This means that use can use the same settings for multiple strings and the gradient will scale to fit. The default value is (0.5, 0.75), which is the center of the baseline for most strings. For string with a lot of descenders (characters that hang below the baseline), you may find that a value of (0.5, 1.0) looks better.
+
+	@property (nonatomic, assign) BOOL oversample;
+	
+You may find that for some combinations of effects, the quality of the text edges is poor, particularly on non-Retina devices. In these cases, you can enable the oversample property, which will cause the text to be drawn at double resolution and then downscaled to improve the quality of the drawing. This carries a performance penalty, so should only be used if the quality without oversampling is unacceptable. This property relies on iOS 4 features and has no effect on iOS 3.x.
 
 	
 Notes

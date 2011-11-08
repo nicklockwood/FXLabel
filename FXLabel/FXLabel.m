@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.1
+//  Version 1.2
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design. All rights reserved.
@@ -40,6 +40,7 @@
 @synthesize gradientEndColor;
 @synthesize gradientStartPoint;
 @synthesize gradientEndPoint;
+@synthesize oversample;
 
 
 - (void)setDefaults
@@ -115,6 +116,15 @@
     }
 }
 
+- (void)setOversample:(BOOL)over
+{
+    if (oversample != over)
+    {
+		oversample = over && [[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0f;
+        [self setNeedsDisplay];
+    }
+}
+
 - (void)getComponents:(CGFloat *)rgba forColor:(CGColorRef)color
 {
     CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color));
@@ -170,6 +180,11 @@
 
 - (void)drawRect:(CGRect)rect
 {
+    //get drawing context
+	if (oversample)
+    {
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, [[UIScreen mainScreen] scale] * 2.0f);
+    }
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //get label size
@@ -192,7 +207,7 @@
     
     //set font
     UIFont *font = [self.font fontWithSize:fontSize];
-
+    
     //set position
     switch (self.textAlignment)
     {
@@ -204,6 +219,10 @@
         case UITextAlignmentRight:
         {
             textRect.origin.x = rect.size.width - textRect.size.width;
+            break;
+        }
+        default:
+        {
             break;
         }
     }
@@ -231,15 +250,15 @@
     }
     
     BOOL hasShadow = self.shadowColor &&
-        ![self.shadowColor isEqual:[UIColor clearColor]] &&
-        (shadowBlur > 0.0f || !CGSizeEqualToSize(self.shadowOffset, CGSizeZero));
+    ![self.shadowColor isEqual:[UIColor clearColor]] &&
+    (shadowBlur > 0.0f || !CGSizeEqualToSize(self.shadowOffset, CGSizeZero));
     
     BOOL hasInnerShadow = innerShadowColor &&
-        ![self.innerShadowColor isEqual:[UIColor clearColor]] &&
-        !CGSizeEqualToSize(innerShadowOffset, CGSizeZero);
+    ![self.innerShadowColor isEqual:[UIColor clearColor]] &&
+    !CGSizeEqualToSize(innerShadowOffset, CGSizeZero);
     
     BOOL hasGradient = gradientStartColor && gradientEndColor;
-
+    
     BOOL needsMask = hasInnerShadow || hasGradient;
     
     CGImageRef alphaMask = NULL;
@@ -257,9 +276,9 @@
         CGContextClearRect(context, textRect);
     }
     
-    //set up shadow
     if (hasShadow)
     {
+        //set up shadow
         CGContextSaveGState(context);
         CGFloat textAlpha = CGColorGetAlpha(self.textColor.CGColor);
         CGContextSetShadowWithColor(context, self.shadowOffset, shadowBlur, self.shadowColor.CGColor);
@@ -267,7 +286,13 @@
         [self.text drawInRect:textRect withFont:font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
         CGContextRestoreGState(context);
     }
-
+    else if (!needsMask)
+    {
+        //just draw the text
+        [self.textColor setFill];
+        [self.text drawInRect:textRect withFont:font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
+    }
+    
     if (needsMask)
     {
         //clip the context
@@ -312,10 +337,17 @@
             [self.textColor setFill];
             CGContextFillRect(context, textRect);
         }
-
+        
         //end clipping
         CGContextRestoreGState(context);
         CGImageRelease(alphaMask);
+    }
+    
+    if (oversample)
+    {
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        [image drawInRect:rect];
     }
 }
 
