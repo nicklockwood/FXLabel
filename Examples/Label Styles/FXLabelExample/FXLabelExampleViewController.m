@@ -14,6 +14,7 @@
 @synthesize label2;
 @synthesize label3;
 @synthesize label4;
+@synthesize label5;
 
 
 - (void)viewDidLoad
@@ -36,18 +37,31 @@
     //demonstrate gradient fill
     label3.gradientStartColor = [UIColor redColor];
     label3.gradientEndColor = [UIColor blackColor];
+
+    //demonstrate multi-part gradient
+    label4.gradientStartPoint = CGPointMake(0.0f, 0.0f);
+    label4.gradientEndPoint = CGPointMake(1.0f, 1.0f);
+    label4.gradientColors = [NSArray arrayWithObjects:
+                             [UIColor redColor],
+                             [UIColor yellowColor],
+                             [UIColor greenColor],
+                             [UIColor cyanColor],
+                             [UIColor blueColor],
+                             [UIColor purpleColor],
+                             [UIColor redColor],
+                             nil];
     
     //everything
-    label4.shadowColor = [UIColor blackColor];
-    label4.shadowOffset = CGSizeZero;
-    label4.shadowBlur = 20.0f;
-    label4.innerShadowColor = [UIColor yellowColor];
-    label4.innerShadowOffset = CGSizeMake(1.0f, 2.0f);
-    label4.gradientStartColor = [UIColor redColor];
-    label4.gradientEndColor = [UIColor yellowColor];
-    label4.gradientStartPoint = CGPointMake(0.0f, 0.5f);
-    label4.gradientEndPoint = CGPointMake(1.0f, 0.5f);
-    label4.oversample = YES;
+    label5.shadowColor = [UIColor blackColor];
+    label5.shadowOffset = CGSizeZero;
+    label5.shadowBlur = 20.0f;
+    label5.innerShadowColor = [UIColor yellowColor];
+    label5.innerShadowOffset = CGSizeMake(1.0f, 2.0f);
+    label5.gradientStartColor = [UIColor redColor];
+    label5.gradientEndColor = [UIColor yellowColor];
+    label5.gradientStartPoint = CGPointMake(0.0f, 0.5f);
+    label5.gradientEndPoint = CGPointMake(1.0f, 0.5f);
+    label5.oversampling = 2;
 }
 
 - (void)viewDidUnload
@@ -56,6 +70,7 @@
     self.label2 = nil;
     self.label3 = nil;
     self.label4 = nil;
+    self.label5 = nil;
     [super viewDidUnload];
 }
 
@@ -65,6 +80,7 @@
     [label2 release];
     [label3 release];
     [label4 release];
+    [label5 release];
     [super dealloc];
 }
 

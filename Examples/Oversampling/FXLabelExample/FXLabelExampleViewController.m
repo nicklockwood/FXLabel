@@ -10,41 +10,65 @@
 
 @implementation FXLabelExampleViewController
 
-@synthesize label1;
-@synthesize label2;
+@synthesize label;
+@synthesize oversamplingLabel;
+@synthesize oversamplingSlider;
+@synthesize fontSizeLabel;
+@synthesize fontSizeSlider;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    //without oversampling
-    label1.shadowColor = [UIColor colorWithWhite:1.0f alpha:0.2f];
-    label1.shadowBlur = 1.0f;
-    label1.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    label1.innerShadowColor = [UIColor blackColor];
-    label1.innerShadowOffset = CGSizeMake(0.0f, 1.2f);
-    label1.oversample = NO;
+    //no oversampling
+    label.shadowColor = [UIColor colorWithWhite:1.0f alpha:0.2f];
+    label.shadowOffset = CGSizeMake(0.5f, 1.0f);
+    label.innerShadowColor = [UIColor blackColor];
+    label.innerShadowOffset = CGSizeMake(0.5f, 1.0f);
+    label.oversampling = 1;
     
-    //with oversampling
-    label2.shadowColor = [UIColor colorWithWhite:1.0f alpha:0.2f];
-    label2.shadowBlur = 1.0f;
-    label2.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    label2.innerShadowColor = [UIColor blackColor];
-    label2.innerShadowOffset = CGSizeMake(0.0f, 1.2f);
-    label2.oversample = YES;
+    //set minimum
+    oversamplingSlider.minimumValue = label.oversampling;
+    
+    //update labels
+    [self setOversampling:oversamplingSlider];
+    [self setFontSize:fontSizeSlider];
+}
+
+- (IBAction)setOversampling:(UISlider *)slider
+{
+    slider.value = roundf(slider.value);
+    label.oversampling = slider.value;
+    
+    NSString *sampling = [NSString stringWithFormat:@"%ix", (int)slider.value];
+    oversamplingLabel.text = [NSString stringWithFormat:@"Oversampling (%@)", (slider.value > slider.minimumValue)? sampling: @"none"];
+}
+
+- (IBAction)setFontSize:(UISlider *)slider
+{
+    slider.value = roundf(slider.value);
+    label.font = [label.font fontWithSize:slider.value];
+    
+    fontSizeLabel.text = [NSString stringWithFormat:@"Font size (%i)", (int)label.font.pointSize];
 }
 
 - (void)viewDidUnload
 {
-    self.label1 = nil;
-    self.label2 = nil;
+    self.label = nil;
+    self.oversamplingLabel = nil;
+    self.oversamplingSlider = nil;
+    self.fontSizeLabel = nil;
+    self.fontSizeSlider = nil;
     [super viewDidUnload];
 }
 
 - (void)dealloc
 {
-    [label1 release];
-    [label2 release];
+    [label release];
+    [oversamplingLabel release];
+    [oversamplingSlider release];
+    [fontSizeLabel release];
+    [fontSizeSlider release];
     [super dealloc];
 }
 

@@ -1,3 +1,12 @@
+Version 1.3
+
+- Added new gradientColors array for specifying multi-part gradients
+- Added new textInsets property to prevent effects being truncated
+- Fixed bug where multi-line fields were truncated to a single line
+- Highlighted color is now respected when highlighted property is set
+- Replaced oversample property with oversampling property that allows the developer to specify the degree of oversampling required
+- Added additional example projects
+
 Version 1.2
 
 - Added oversample property to improve drawing quality for some effects.

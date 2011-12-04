@@ -14,8 +14,5 @@
 
 @property (nonatomic, retain) IBOutlet FXLabel *label1;
 @property (nonatomic, retain) IBOutlet FXLabel *label2;
-@property (nonatomic, retain) IBOutlet FXLabel *label3;
-@property (nonatomic, retain) IBOutlet FXLabel *label4;
-@property (nonatomic, retain) IBOutlet FXLabel *label5;
 
 @end

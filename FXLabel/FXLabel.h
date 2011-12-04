@@ -1,7 +1,7 @@
 //
 //  FXLabel.h
 //
-//  Version 1.2
+//  Version 1.3
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design. All rights reserved.
@@ -37,8 +37,10 @@
 @property (nonatomic, retain) UIColor *innerShadowColor;
 @property (nonatomic, retain) UIColor *gradientStartColor;
 @property (nonatomic, retain) UIColor *gradientEndColor;
+@property (nonatomic, copy) NSArray *gradientColors;
 @property (nonatomic, assign) CGPoint gradientStartPoint;
 @property (nonatomic, assign) CGPoint gradientEndPoint;
-@property (nonatomic, assign) BOOL oversample;
+@property (nonatomic, assign) NSUInteger oversampling;
+@property (nonatomic, assign) UIEdgeInsets textInsets;
 
 @end

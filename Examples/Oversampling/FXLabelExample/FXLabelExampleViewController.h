@@ -12,7 +12,13 @@
 
 @interface FXLabelExampleViewController : UIViewController
 
-@property (nonatomic, retain) IBOutlet FXLabel *label1;
-@property (nonatomic, retain) IBOutlet FXLabel *label2;
+@property (nonatomic, retain) IBOutlet FXLabel *label;
+@property (nonatomic, retain) IBOutlet UILabel *oversamplingLabel;
+@property (nonatomic, retain) IBOutlet UISlider *oversamplingSlider;
+@property (nonatomic, retain) IBOutlet UILabel *fontSizeLabel;
+@property (nonatomic, retain) IBOutlet UISlider *fontSizeSlider;
+
+- (IBAction)setOversampling:(UISlider *)slider;
+- (IBAction)setFontSize:(UISlider *)slider;
 
 @end
