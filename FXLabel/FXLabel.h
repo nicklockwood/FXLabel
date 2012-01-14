@@ -1,11 +1,12 @@
 //
 //  FXLabel.h
 //
-//  Version 1.3
+//  Version 1.3.1
 //
 //  Created by Nick Lockwood on 20/08/2011.
-//  Copyright 2011 Charcoal Design. All rights reserved.
+//  Copyright 2011 Charcoal Design
 //
+//  Distributed under the permissive zlib license
 //  Get the latest version from either of these locations:
 //
 //  http://charcoaldesign.co.uk/source/cocoa#fxlabel
@@ -23,20 +24,56 @@
 //  claim that you wrote the original software. If you use this software
 //  in a product, an acknowledgment in the product documentation would be
 //  appreciated but is not required.
+//
 //  2. Altered source versions must be plainly marked as such, and must not be
 //  misrepresented as being the original software.
+//
 //  3. This notice may not be removed or altered from any source distribution.
 //
 
+//
+//  ARC Helper
+//
+//  Version 1.2
+//
+//  Created by Nick Lockwood on 05/01/2012.
+//  Copyright 2012 Charcoal Design
+//
+//  Distributed under the permissive zlib license
+//  Get the latest version from here:
+//
+//  https://gist.github.com/1563325
+//
+
+#ifndef AH_RETAIN
+#if __has_feature(objc_arc)
+#define AH_RETAIN(x) x
+#define AH_RELEASE(x)
+#define AH_AUTORELEASE(x) x
+#define AH_SUPER_DEALLOC
+#else
+#define __AH_WEAK
+#define AH_WEAK assign
+#define AH_RETAIN(x) [x retain]
+#define AH_RELEASE(x) [x release]
+#define AH_AUTORELEASE(x) [x autorelease]
+#define AH_SUPER_DEALLOC [super dealloc]
+#endif
+#endif
+
+//  ARC Helper ends
+
+
 #import <UIKit/UIKit.h>
+
 
 @interface FXLabel : UILabel
 
 @property (nonatomic, assign) CGFloat shadowBlur;
 @property (nonatomic, assign) CGSize innerShadowOffset;
-@property (nonatomic, retain) UIColor *innerShadowColor;
-@property (nonatomic, retain) UIColor *gradientStartColor;
-@property (nonatomic, retain) UIColor *gradientEndColor;
+@property (nonatomic, strong) UIColor *innerShadowColor;
+@property (nonatomic, strong) UIColor *gradientStartColor;
+@property (nonatomic, strong) UIColor *gradientEndColor;
 @property (nonatomic, copy) NSArray *gradientColors;
 @property (nonatomic, assign) CGPoint gradientStartPoint;
 @property (nonatomic, assign) CGPoint gradientEndPoint;

@@ -1,11 +1,12 @@
 //
 //  FXLabel.m
 //
-//  Version 1.3
+//  Version 1.3.1
 //
 //  Created by Nick Lockwood on 20/08/2011.
-//  Copyright 2011 Charcoal Design. All rights reserved.
+//  Copyright 2011 Charcoal Design
 //
+//  Distributed under the permissive zlib license
 //  Get the latest version from either of these locations:
 //
 //  http://charcoaldesign.co.uk/source/cocoa#fxlabel
@@ -23,8 +24,10 @@
 //  claim that you wrote the original software. If you use this software
 //  in a product, an acknowledgment in the product documentation would be
 //  appreciated but is not required.
+//
 //  2. Altered source versions must be plainly marked as such, and must not be
 //  misrepresented as being the original software.
+//
 //  3. This notice may not be removed or altered from any source distribution.
 //
 
@@ -97,8 +100,8 @@
 {
     if (innerShadowColor != color)
     {
-        [innerShadowColor release];
-        innerShadowColor = [color retain];
+        AH_RELEASE(innerShadowColor);
+        innerShadowColor = AH_RETAIN(color);
         [self setNeedsDisplay];
     }
 }
@@ -120,11 +123,10 @@
     }
     else if ([gradientColors objectAtIndex:0] != color)
     {
-        [gradientColors autorelease];
         NSMutableArray *colors = [gradientColors mutableCopy];
         [colors replaceObjectAtIndex:0 withObject:color];
-        gradientColors = [colors copy];
-        [colors release];
+        self.gradientColors = colors;
+        AH_RELEASE(colors);
     }
 }
 
@@ -145,11 +147,10 @@
     }
     else if ([gradientColors lastObject] != color)
     {
-        [gradientColors autorelease];
         NSMutableArray *colors = [gradientColors mutableCopy];
         [colors replaceObjectAtIndex:[colors count] - 1 withObject:color];
-        gradientColors = [colors copy];
-        [colors release];
+        self.gradientColors = colors;
+        AH_RELEASE(colors);
     }
 }
 
@@ -157,7 +158,7 @@
 {
     if (gradientColors != colors)
     {
-        [gradientColors release];
+        AH_RELEASE(gradientColors);
         gradientColors = [colors copy];
         [self setNeedsDisplay];
     }
@@ -394,13 +395,13 @@
             for (UIColor *color in gradientColors)
             {
                 CGColorRef colorRef = [self color:color.CGColor blendedWithColor:textColor.CGColor];
-                [colors addObject:(id)colorRef];
+                [colors addObject:(__bridge id)colorRef];
             }
-    
+            
             //draw gradient
             CGContextScaleCTM(context, 1.0, -1.0);
             CGContextTranslateCTM(context, 0, -rect.size.height);
-            CGGradientRef gradient = CGGradientCreateWithColors(NULL, (CFArrayRef)colors, NULL);
+            CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)colors, NULL);
             CGPoint startPoint = CGPointMake(textRect.origin.x + gradientStartPoint.x * textRect.size.width,
                                              textRect.origin.y + gradientStartPoint.y * textRect.size.height);
             CGPoint endPoint = CGPointMake(textRect.origin.x + gradientEndPoint.x * textRect.size.width,
@@ -431,9 +432,9 @@
 
 - (void)dealloc
 {
-    [innerShadowColor release];
-    [gradientColors release];
-    [super dealloc];
+    AH_RELEASE(innerShadowColor);
+    AH_RELEASE(gradientColors);
+    AH_SUPER_DEALLOC;
 }
 
 @end

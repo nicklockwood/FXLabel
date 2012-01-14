@@ -1,5 +1,6 @@
 FXLabel
-version 1.3, December 2nd, 2011
+
+Version 1.3.1, January 14th, 2012
 
 Copyright (C) 2011 Charcoal Design
 
