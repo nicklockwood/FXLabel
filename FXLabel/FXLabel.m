@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.3.1
+//  Version 1.3.2
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -219,16 +219,6 @@
 
 - (CGColorRef)color:(CGColorRef)a blendedWithColor:(CGColorRef)b
 {
-    CGFloat alpha = CGColorGetAlpha(a);
-    if (alpha == 1.0f)
-    {
-        return a;
-    }
-    else if (alpha == 0.0f)
-    {
-        return b;
-    }
-    
     CGFloat aRGBA[4];
     [self getComponents:aRGBA forColor:a];
     CGFloat bRGBA[4];
@@ -244,7 +234,7 @@
 - (void)drawRect:(CGRect)rect
 {
     //get drawing context
-	if (oversampling > minSamples)
+	if (oversampling > minSamples || (self.backgroundColor && ![self.backgroundColor isEqual:[UIColor clearColor]]))
     {
         UIGraphicsBeginImageContextWithOptions(rect.size, NO, oversampling);
     }

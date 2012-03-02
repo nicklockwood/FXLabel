@@ -1,3 +1,8 @@
+Version 1.3.2
+
+- Fixed bug when using non RGB blending colors (e.g. [UIColor blackColor])
+- Fixed issue where inner shadow is applied to the label frame when background color is not transparent
+
 Version 1.3.1
 
 - Added automatic support for ARC compile targets

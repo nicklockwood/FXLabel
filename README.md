@@ -39,7 +39,7 @@ The softness of the text shadow. Defaults to zero, which creates a hard shadow, 
 	
 The offset for the inner shadow. Works the same way as shadowOffset. Currently only hard-edged inner shadows are supported.
 	
-	@property (nonatomic, retain) UIColor *innerShadowColor;
+	@property (nonatomic, strong) UIColor *innerShadowColor;
 	
 The colour of the inner shadow.
 
@@ -47,11 +47,11 @@ The colour of the inner shadow.
 	
 An array of colors used to produce a gradient effect across the text. The minimum number of gradient colours you can specify is two - if the array contains fewer than two colours it will be ignored. If the alpha component of any of the colours is less than 1.0, it will be blended with the textColor. Patterned, indexed or HSV colours are not supported. The direction of the gradient is controlled by the gradientStartPoint and gradientEndPoint properties. The default direction is vertical.
 	
-	@property (nonatomic, retain) UIColor *gradientStartColor;
+	@property (nonatomic, strong) UIColor *gradientStartColor;
 	
 The starting/upper color of the gradient. This property is just a convenience accessor for the first element in the gradientColors array.
 	
-	@property (nonatomic, retain) UIColor *gradientEndColor;
+	@property (nonatomic, strong) UIColor *gradientEndColor;
 	
 The ending/lower color of the gradient. This property is just a convenience accessor for the last element in the gradientColors array.
 
