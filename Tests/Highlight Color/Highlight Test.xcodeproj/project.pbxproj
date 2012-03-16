@@ -19,14 +19,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0B8B2D2A14887CC500BFD0BC /* FXLabelTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FXLabelTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B8B2D2A14887CC500BFD0BC /* Highlight Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Highlight Test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B8B2D2E14887CC500BFD0BC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0B8B2D3014887CC500BFD0BC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0B8B2D3214887CC500BFD0BC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		0B8B2D3614887CC500BFD0BC /* FXLabelTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FXLabelTest-Info.plist"; sourceTree = "<group>"; };
+		0B8B2D3614887CC500BFD0BC /* Highlight Test-Info.plist */ = {isa = PBXFileReference; path = "Highlight Test-Info.plist"; sourceTree = "<group>"; };
 		0B8B2D3814887CC500BFD0BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0B8B2D3A14887CC500BFD0BC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0B8B2D3C14887CC500BFD0BC /* FXLabelTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FXLabelTest-Prefix.pch"; sourceTree = "<group>"; };
+		0B8B2D3C14887CC500BFD0BC /* Highlight Test-Prefix.pch */ = {isa = PBXFileReference; path = "Highlight Test-Prefix.pch"; sourceTree = "<group>"; };
 		0B8B2D3D14887CC500BFD0BC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0B8B2D3E14887CC500BFD0BC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		0B8B2D4014887CC500BFD0BC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -63,7 +63,7 @@
 		0B8B2D2B14887CC500BFD0BC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0B8B2D2A14887CC500BFD0BC /* FXLabelTest.app */,
+				0B8B2D2A14887CC500BFD0BC /* Highlight Test.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -94,10 +94,10 @@
 		0B8B2D3514887CC500BFD0BC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0B8B2D3614887CC500BFD0BC /* FXLabelTest-Info.plist */,
+				0B8B2D3614887CC500BFD0BC /* Highlight Test-Info.plist */,
 				0B8B2D3714887CC500BFD0BC /* InfoPlist.strings */,
 				0B8B2D3A14887CC500BFD0BC /* main.m */,
-				0B8B2D3C14887CC500BFD0BC /* FXLabelTest-Prefix.pch */,
+				0B8B2D3C14887CC500BFD0BC /* Highlight Test-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -115,9 +115,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0B8B2D2914887CC500BFD0BC /* FXLabelTest */ = {
+		0B8B2D2914887CC500BFD0BC /* Highlight Test */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0B8B2D4814887CC500BFD0BC /* Build configuration list for PBXNativeTarget "FXLabelTest" */;
+			buildConfigurationList = 0B8B2D4814887CC500BFD0BC /* Build configuration list for PBXNativeTarget "Highlight Test" */;
 			buildPhases = (
 				0B8B2D2614887CC500BFD0BC /* Sources */,
 				0B8B2D2714887CC500BFD0BC /* Frameworks */,
@@ -127,9 +127,9 @@
 			);
 			dependencies = (
 			);
-			name = FXLabelTest;
+			name = "Highlight Test";
 			productName = FXLabelTest;
-			productReference = 0B8B2D2A14887CC500BFD0BC /* FXLabelTest.app */;
+			productReference = 0B8B2D2A14887CC500BFD0BC /* Highlight Test.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -140,7 +140,7 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 			};
-			buildConfigurationList = 0B8B2D2414887CC500BFD0BC /* Build configuration list for PBXProject "FXLabelTest" */;
+			buildConfigurationList = 0B8B2D2414887CC500BFD0BC /* Build configuration list for PBXProject "Highlight Test" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -152,7 +152,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0B8B2D2914887CC500BFD0BC /* FXLabelTest */,
+				0B8B2D2914887CC500BFD0BC /* Highlight Test */,
 			);
 		};
 /* End PBXProject section */
@@ -250,9 +250,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FXLabelTest/FXLabelTest-Prefix.pch";
-				INFOPLIST_FILE = "FXLabelTest/FXLabelTest-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "FXLabelTest/Highlight Test-Prefix.pch";
+				INFOPLIST_FILE = "FXLabelTest/Highlight Test-Info.plist";
+				PRODUCT_NAME = "Highlight Test";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -261,9 +261,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FXLabelTest/FXLabelTest-Prefix.pch";
-				INFOPLIST_FILE = "FXLabelTest/FXLabelTest-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "FXLabelTest/Highlight Test-Prefix.pch";
+				INFOPLIST_FILE = "FXLabelTest/Highlight Test-Info.plist";
+				PRODUCT_NAME = "Highlight Test";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -271,7 +271,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0B8B2D2414887CC500BFD0BC /* Build configuration list for PBXProject "FXLabelTest" */ = {
+		0B8B2D2414887CC500BFD0BC /* Build configuration list for PBXProject "Highlight Test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0B8B2D4614887CC500BFD0BC /* Debug */,
@@ -280,7 +280,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0B8B2D4814887CC500BFD0BC /* Build configuration list for PBXNativeTarget "FXLabelTest" */ = {
+		0B8B2D4814887CC500BFD0BC /* Build configuration list for PBXNativeTarget "Highlight Test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0B8B2D4914887CC500BFD0BC /* Debug */,

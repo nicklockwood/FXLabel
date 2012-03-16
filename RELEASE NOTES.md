@@ -1,3 +1,7 @@
+Version 1.3.3
+
+- Fixed ARC crash introduced in version 1.3.2
+
 Version 1.3.2
 
 - Fixed bug when using non RGB blending colors (e.g. [UIColor blackColor])

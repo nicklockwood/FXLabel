@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.3.2
+//  Version 1.3.3
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -217,7 +217,7 @@
     }
 }
 
-- (CGColorRef)color:(CGColorRef)a blendedWithColor:(CGColorRef)b
+- (UIColor *)color:(CGColorRef)a blendedWithColor:(CGColorRef)b
 {
     CGFloat aRGBA[4];
     [self getComponents:aRGBA forColor:a];
@@ -228,7 +228,7 @@
     return [UIColor colorWithRed:source * aRGBA[0] + dest * bRGBA[0]
                            green:source * aRGBA[1] + dest * bRGBA[1]
                             blue:source * aRGBA[2] + dest * bRGBA[2]
-                           alpha:bRGBA[3] + (1.0f - bRGBA[3]) * aRGBA[3]].CGColor;
+                           alpha:bRGBA[3] + (1.0f - bRGBA[3]) * aRGBA[3]];
 }
 
 - (void)drawRect:(CGRect)rect
@@ -384,8 +384,8 @@
             NSMutableArray *colors = [NSMutableArray arrayWithCapacity:[gradientColors count]];
             for (UIColor *color in gradientColors)
             {
-                CGColorRef colorRef = [self color:color.CGColor blendedWithColor:textColor.CGColor];
-                [colors addObject:(__bridge id)colorRef];
+                UIColor *blended = [self color:color.CGColor blendedWithColor:textColor.CGColor];
+                [colors addObject:(__bridge id)blended.CGColor];
             }
             
             //draw gradient
