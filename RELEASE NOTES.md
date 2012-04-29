@@ -1,3 +1,8 @@
+Version 1.3.4
+
+- Updated ARC Helper to version 1.3
+- Fixed warning under Apple LLVM compiler 4.0
+
 Version 1.3.3
 
 - Fixed ARC crash introduced in version 1.3.2
@@ -10,7 +15,7 @@ Version 1.3.2
 Version 1.3.1
 
 - Added automatic support for ARC compile targets
-- Now requires Apple LLVM 3.0 compiler target
+- Now requires Apple LLVM compiler 3.0 target
 
 Version 1.3
 

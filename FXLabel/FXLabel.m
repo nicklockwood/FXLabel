@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.3.3
+//  Version 1.3.4
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -385,13 +385,13 @@
             for (UIColor *color in gradientColors)
             {
                 UIColor *blended = [self color:color.CGColor blendedWithColor:textColor.CGColor];
-                [colors addObject:(__bridge id)blended.CGColor];
+                [colors addObject:(__AH_BRIDGE id)blended.CGColor];
             }
             
             //draw gradient
             CGContextScaleCTM(context, 1.0, -1.0);
             CGContextTranslateCTM(context, 0, -rect.size.height);
-            CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)colors, NULL);
+            CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__AH_BRIDGE CFArrayRef)colors, NULL);
             CGPoint startPoint = CGPointMake(textRect.origin.x + gradientStartPoint.x * textRect.size.width,
                                              textRect.origin.y + gradientStartPoint.y * textRect.size.height);
             CGPoint endPoint = CGPointMake(textRect.origin.x + gradientEndPoint.x * textRect.size.width,
