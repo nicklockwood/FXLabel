@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.3.4
+//  Version 1.3.5
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -100,8 +100,8 @@
 {
     if (innerShadowColor != color)
     {
-        AH_RELEASE(innerShadowColor);
-        innerShadowColor = AH_RETAIN(color);
+        [innerShadowColor release];
+        innerShadowColor = [color ah_retain];
         [self setNeedsDisplay];
     }
 }
@@ -126,7 +126,7 @@
         NSMutableArray *colors = [gradientColors mutableCopy];
         [colors replaceObjectAtIndex:0 withObject:color];
         self.gradientColors = colors;
-        AH_RELEASE(colors);
+        [colors release];
     }
 }
 
@@ -150,7 +150,7 @@
         NSMutableArray *colors = [gradientColors mutableCopy];
         [colors replaceObjectAtIndex:[colors count] - 1 withObject:color];
         self.gradientColors = colors;
-        AH_RELEASE(colors);
+        [colors release];
     }
 }
 
@@ -158,7 +158,7 @@
 {
     if (gradientColors != colors)
     {
-        AH_RELEASE(gradientColors);
+        [gradientColors release];
         gradientColors = [colors copy];
         [self setNeedsDisplay];
     }
@@ -250,10 +250,18 @@
     //get label size
     CGRect textRect = rect;
     CGFloat fontSize = self.font.pointSize;
+    CGFloat minimumFontSize;
+    
+#if __IPHONE_OS_VERSION_MIN_REQUIRED == __IPHONE_6_0
+    minimumFontSize = self.minimumScaleFactor? self.minimumScaleFactor * fontSize: fontSize;
+#else
+    minimumFontSize = self.minimumFontSize;
+#endif
+    
     if (self.adjustsFontSizeToFitWidth && self.numberOfLines == 1)
     {
         textRect.size = [self.text sizeWithFont:self.font
-                                    minFontSize:self.minimumFontSize
+                                    minFontSize:minimumFontSize
                                  actualFontSize:&fontSize
                                        forWidth:rect.size.width
                                   lineBreakMode:self.lineBreakMode];
@@ -276,12 +284,12 @@
     //set position
     switch (self.textAlignment)
     {
-        case UITextAlignmentCenter:
+        case NSTextAlignmentCenter:
         {
             textRect.origin.x = rect.origin.x + (rect.size.width - textRect.size.width) / 2.0f;
             break;
         }
-        case UITextAlignmentRight:
+        case NSTextAlignmentRight:
         {
             textRect.origin.x = textRect.origin.x + rect.size.width - textRect.size.width;
             break;
@@ -385,13 +393,13 @@
             for (UIColor *color in gradientColors)
             {
                 UIColor *blended = [self color:color.CGColor blendedWithColor:textColor.CGColor];
-                [colors addObject:(__AH_BRIDGE id)blended.CGColor];
+                [colors addObject:(__bridge id)blended.CGColor];
             }
             
             //draw gradient
             CGContextScaleCTM(context, 1.0, -1.0);
             CGContextTranslateCTM(context, 0, -rect.size.height);
-            CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__AH_BRIDGE CFArrayRef)colors, NULL);
+            CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)colors, NULL);
             CGPoint startPoint = CGPointMake(textRect.origin.x + gradientStartPoint.x * textRect.size.width,
                                              textRect.origin.y + gradientStartPoint.y * textRect.size.height);
             CGPoint endPoint = CGPointMake(textRect.origin.x + gradientEndPoint.x * textRect.size.width,
@@ -422,9 +430,9 @@
 
 - (void)dealloc
 {
-    AH_RELEASE(innerShadowColor);
-    AH_RELEASE(gradientColors);
-    AH_SUPER_DEALLOC;
+    [innerShadowColor release];
+    [gradientColors release];
+    [super ah_dealloc];
 }
 
 @end

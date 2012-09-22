@@ -1,3 +1,8 @@
+Version 1.3.5
+
+- Fixed deprecation warnings under iOS 6
+- Updated ARC Helper to version 2.1
+
 Version 1.3.4
 
 - Updated ARC Helper to version 1.3

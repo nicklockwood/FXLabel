@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01924553160E3D45005A22BB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01924552160E3D45005A22BB /* Default-568h@2x.png */; };
 		01FAC1001400668500B63C5B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FAC0FF1400668500B63C5B /* UIKit.framework */; };
 		01FAC1021400668500B63C5B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FAC1011400668500B63C5B /* Foundation.framework */; };
 		01FAC1041400668500B63C5B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FAC1031400668500B63C5B /* CoreGraphics.framework */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01924552160E3D45005A22BB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		01FAC0FB1400668500B63C5B /* FXLabelExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FXLabelExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01FAC0FF1400668500B63C5B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		01FAC1011400668500B63C5B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -97,6 +99,7 @@
 		01FAC1061400668500B63C5B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				01924552160E3D45005A22BB /* Default-568h@2x.png */,
 				01FAC1071400668500B63C5B /* FXLabelExample-Info.plist */,
 				01FAC1081400668500B63C5B /* InfoPlist.strings */,
 				01FAC10B1400668500B63C5B /* main.m */,
@@ -168,6 +171,7 @@
 				01FAC10A1400668500B63C5B /* InfoPlist.strings in Resources */,
 				01FAC1131400668500B63C5B /* MainWindow.xib in Resources */,
 				01FAC1191400668500B63C5B /* FXLabelExampleViewController.xib in Resources */,
+				01924553160E3D45005A22BB /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

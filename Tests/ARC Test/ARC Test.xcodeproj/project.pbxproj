@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01924561160E3DF7005A22BB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01924560160E3DF7005A22BB /* Default-568h@2x.png */; };
 		01FAC1001400668500B63C5B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FAC0FF1400668500B63C5B /* UIKit.framework */; };
 		01FAC1021400668500B63C5B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FAC1011400668500B63C5B /* Foundation.framework */; };
 		01FAC1041400668500B63C5B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FAC1031400668500B63C5B /* CoreGraphics.framework */; };
@@ -20,14 +21,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01924560160E3DF7005A22BB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		01FAC0FB1400668500B63C5B /* ARC Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ARC Test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		01FAC0FF1400668500B63C5B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		01FAC1011400668500B63C5B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		01FAC1031400668500B63C5B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		01FAC1071400668500B63C5B /* ARC Test-Info.plist */ = {isa = PBXFileReference; path = "ARC Test-Info.plist"; sourceTree = "<group>"; };
+		01FAC1071400668500B63C5B /* ARC Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ARC Test-Info.plist"; sourceTree = "<group>"; };
 		01FAC1091400668500B63C5B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		01FAC10B1400668500B63C5B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		01FAC10D1400668500B63C5B /* ARC Test-Prefix.pch */ = {isa = PBXFileReference; path = "ARC Test-Prefix.pch"; sourceTree = "<group>"; };
+		01FAC10D1400668500B63C5B /* ARC Test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ARC Test-Prefix.pch"; sourceTree = "<group>"; };
 		01FAC10E1400668500B63C5B /* FXLabelExampleAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FXLabelExampleAppDelegate.h; sourceTree = "<group>"; };
 		01FAC10F1400668500B63C5B /* FXLabelExampleAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FXLabelExampleAppDelegate.m; sourceTree = "<group>"; };
 		01FAC1121400668500B63C5B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 		01FAC1061400668500B63C5B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				01924560160E3DF7005A22BB /* Default-568h@2x.png */,
 				01FAC1071400668500B63C5B /* ARC Test-Info.plist */,
 				01FAC1081400668500B63C5B /* InfoPlist.strings */,
 				01FAC10B1400668500B63C5B /* main.m */,
@@ -168,6 +171,7 @@
 				01FAC10A1400668500B63C5B /* InfoPlist.strings in Resources */,
 				01FAC1131400668500B63C5B /* MainWindow.xib in Resources */,
 				01FAC1191400668500B63C5B /* FXLabelExampleViewController.xib in Resources */,
+				01924561160E3DF7005A22BB /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
