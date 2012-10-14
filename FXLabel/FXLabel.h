@@ -1,15 +1,14 @@
 //
 //  FXLabel.h
 //
-//  Version 1.3.5
+//  Version 1.3.6
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
 //
 //  Distributed under the permissive zlib license
-//  Get the latest version from either of these locations:
+//  Get the latest version from here:
 //
-//  http://charcoaldesign.co.uk/source/cocoa#fxlabel
 //  https://github.com/nicklockwood/FXLabel
 //
 //  This software is provided 'as-is', without any express or implied

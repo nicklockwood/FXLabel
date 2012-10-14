@@ -1,3 +1,8 @@
+Version 1.3.6
+
+- Fixed bug with baseline alignment when text is autoshrunk
+- Fixed bug when using textInset property that could result in text appearing squashed or stretched
+
 Version 1.3.5
 
 - Fixed deprecation warnings under iOS 6

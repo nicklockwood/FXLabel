@@ -1,15 +1,14 @@
 //
 //  FXLabel.m
 //
-//  Version 1.3.5
+//  Version 1.3.6
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
 //
 //  Distributed under the permissive zlib license
-//  Get the latest version from either of these locations:
+//  Get the latest version from here:
 //
-//  http://charcoaldesign.co.uk/source/cocoa#fxlabel
 //  https://github.com/nicklockwood/FXLabel
 //
 //  This software is provided 'as-is', without any express or implied
@@ -44,28 +43,28 @@
 
 @implementation FXLabel
 
-@synthesize shadowBlur;
-@synthesize innerShadowOffset;
-@synthesize innerShadowColor;
-@synthesize gradientColors;
-@synthesize gradientStartPoint;
-@synthesize gradientEndPoint;
-@synthesize oversampling;
-@synthesize minSamples;
-@synthesize maxSamples;
-@synthesize textInsets;
+@synthesize shadowBlur; //avoid conflict with private property
+@synthesize innerShadowOffset = _innerShadowOffset;
+@synthesize innerShadowColor = _innerShadowColor;
+@synthesize gradientColors = _gradientColors;
+@synthesize gradientStartPoint = _gradientStartPoint;
+@synthesize gradientEndPoint = _gradientEndPoint;
+@synthesize oversampling =_oversampling;
+@synthesize minSamples = _minSamples;
+@synthesize maxSamples = _maxSamples;
+@synthesize textInsets = _textInsets;
 
 - (void)setDefaults
 {
-    gradientStartPoint = CGPointMake(0.5f, 0.0f);
-    gradientEndPoint = CGPointMake(0.5f, 0.75f);
-    minSamples = maxSamples = 1;
+    _gradientStartPoint = CGPointMake(0.5f, 0.0f);
+    _gradientEndPoint = CGPointMake(0.5f, 0.75f);
+    _minSamples = _maxSamples = 1;
     if ([UIScreen instancesRespondToSelector:@selector(scale)])
     {
-        minSamples = [UIScreen mainScreen].scale;
-        maxSamples = 32;
+        _minSamples = [UIScreen mainScreen].scale;
+        _maxSamples = 32;
     }
-    oversampling = minSamples;
+    _oversampling = _minSamples;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -89,26 +88,26 @@
 
 - (void)setInnerShadowOffset:(CGSize)offset
 {
-    if (!CGSizeEqualToSize(innerShadowOffset, offset))
+    if (!CGSizeEqualToSize(_innerShadowOffset, offset))
     {
-        innerShadowOffset = offset;
+        _innerShadowOffset = offset;
         [self setNeedsDisplay];
     }
 }
 
 - (void)setInnerShadowColor:(UIColor *)color
 {
-    if (innerShadowColor != color)
+    if (_innerShadowColor != color)
     {
-        [innerShadowColor release];
-        innerShadowColor = [color ah_retain];
+        [_innerShadowColor release];
+        _innerShadowColor = [color ah_retain];
         [self setNeedsDisplay];
     }
 }
 
 - (UIColor *)gradientStartColor
 {
-    return [gradientColors count]? [gradientColors objectAtIndex:0]: nil;
+    return [_gradientColors count]? [_gradientColors objectAtIndex:0]: nil;
 }
 
 - (void)setGradientStartColor:(UIColor *)color
@@ -117,13 +116,13 @@
     {
         self.gradientColors = nil;
     }
-    else if ([gradientColors count] < 2)
+    else if ([_gradientColors count] < 2)
     {
         self.gradientColors = [NSArray arrayWithObjects:color, color, nil];
     }
-    else if ([gradientColors objectAtIndex:0] != color)
+    else if ([_gradientColors objectAtIndex:0] != color)
     {
-        NSMutableArray *colors = [gradientColors mutableCopy];
+        NSMutableArray *colors = [_gradientColors mutableCopy];
         [colors replaceObjectAtIndex:0 withObject:color];
         self.gradientColors = colors;
         [colors release];
@@ -132,7 +131,7 @@
 
 - (UIColor *)gradientEndColor
 {
-    return [gradientColors lastObject];
+    return [_gradientColors lastObject];
 }
 
 - (void)setGradientEndColor:(UIColor *)color
@@ -141,13 +140,13 @@
     {
         self.gradientColors = nil;
     }
-    else if ([gradientColors count] < 2)
+    else if ([_gradientColors count] < 2)
     {
         self.gradientColors = [NSArray arrayWithObjects:color, color, nil];
     }
-    else if ([gradientColors lastObject] != color)
+    else if ([_gradientColors lastObject] != color)
     {
-        NSMutableArray *colors = [gradientColors mutableCopy];
+        NSMutableArray *colors = [_gradientColors mutableCopy];
         [colors replaceObjectAtIndex:[colors count] - 1 withObject:color];
         self.gradientColors = colors;
         [colors release];
@@ -156,29 +155,29 @@
 
 - (void)setGradientColors:(NSArray *)colors
 {
-    if (gradientColors != colors)
+    if (_gradientColors != colors)
     {
-        [gradientColors release];
-        gradientColors = [colors copy];
+        [_gradientColors release];
+        _gradientColors = [colors copy];
         [self setNeedsDisplay];
     }
 }
 
 - (void)setOversampling:(NSUInteger)samples
 {
-    samples = MIN(maxSamples, MAX(minSamples, samples));
-    if (oversampling != samples)
+    samples = MIN(_maxSamples, MAX(_minSamples, samples));
+    if (_oversampling != samples)
     {
-		oversampling = samples;
+		_oversampling = samples;
         [self setNeedsDisplay];
     }
 }
 
 - (void)setTextInsets:(UIEdgeInsets)insets
 {
-    if (!UIEdgeInsetsEqualToEdgeInsets(textInsets, insets))
+    if (!UIEdgeInsetsEqualToEdgeInsets(_textInsets, insets))
     {
-        textInsets = insets;
+        _textInsets = insets;
         [self setNeedsDisplay];
     }
 }
@@ -231,24 +230,38 @@
                            alpha:bRGBA[3] + (1.0f - bRGBA[3]) * aRGBA[3]];
 }
 
+- (void)drawTextInRect:(CGRect)rect withFont:(UIFont *)font
+{
+    if (self.adjustsFontSizeToFitWidth && self.numberOfLines == 1 && font.pointSize < self.font.pointSize)
+    {
+        CGFloat fontSize = 0.0f;
+        [self.text drawAtPoint:rect.origin forWidth:rect.size.width withFont:self.font minFontSize:font.pointSize actualFontSize:&fontSize lineBreakMode:self.lineBreakMode baselineAdjustment:self.baselineAdjustment];
+    }
+    else
+    {
+        [self.text drawInRect:rect withFont:font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
+    }
+}
+
 - (void)drawRect:(CGRect)rect
 {
     //get drawing context
-	if (oversampling > minSamples || (self.backgroundColor && ![self.backgroundColor isEqual:[UIColor clearColor]]))
+    BOOL subcontext = _oversampling > _minSamples || (self.backgroundColor && ![self.backgroundColor isEqual:[UIColor clearColor]]);
+	if (subcontext)
     {
-        UIGraphicsBeginImageContextWithOptions(rect.size, NO, oversampling);
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, _oversampling);
     }
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //apply insets
-    rect = self.bounds;
-    rect.origin.x += textInsets.left;
-    rect.origin.y += textInsets.top;
-    rect.size.width -= (textInsets.left + textInsets.right);
-    rect.size.height -= (textInsets.top + textInsets.bottom);
+    CGRect contentRect = CGRectMake(0.0f, 0.0f, self.bounds.size.width, self.bounds.size.height);
+    contentRect.origin.x += _textInsets.left;
+    contentRect.origin.y += _textInsets.top;
+    contentRect.size.width -= (_textInsets.left + _textInsets.right);
+    contentRect.size.height -= (_textInsets.top + _textInsets.bottom);
     
     //get label size
-    CGRect textRect = rect;
+    CGRect textRect = contentRect;
     CGFloat fontSize = self.font.pointSize;
     CGFloat minimumFontSize;
     
@@ -263,13 +276,13 @@
         textRect.size = [self.text sizeWithFont:self.font
                                     minFontSize:minimumFontSize
                                  actualFontSize:&fontSize
-                                       forWidth:rect.size.width
+                                       forWidth:contentRect.size.width
                                   lineBreakMode:self.lineBreakMode];
     }
     else
     {
         textRect.size = [self.text sizeWithFont:self.font
-                              constrainedToSize:rect.size
+                              constrainedToSize:contentRect.size
                                   lineBreakMode:self.lineBreakMode];
     }
     
@@ -286,17 +299,17 @@
     {
         case NSTextAlignmentCenter:
         {
-            textRect.origin.x = rect.origin.x + (rect.size.width - textRect.size.width) / 2.0f;
+            textRect.origin.x = contentRect.origin.x + (contentRect.size.width - textRect.size.width) / 2.0f;
             break;
         }
         case NSTextAlignmentRight:
         {
-            textRect.origin.x = textRect.origin.x + rect.size.width - textRect.size.width;
+            textRect.origin.x = contentRect.origin.x + contentRect.size.width - textRect.size.width;
             break;
         }
         default:
         {
-            textRect.origin.x = rect.origin.x;
+            textRect.origin.x = contentRect.origin.x;
             break;
         }
     }
@@ -306,19 +319,19 @@
         case UIViewContentModeTopLeft:
         case UIViewContentModeTopRight:
         {
-            textRect.origin.y = rect.origin.y;
+            textRect.origin.y = contentRect.origin.y;
             break;
         }
         case UIViewContentModeBottom:
         case UIViewContentModeBottomLeft:
         case UIViewContentModeBottomRight:
         {
-            textRect.origin.y = rect.origin.y + rect.size.height - textRect.size.height;
+            textRect.origin.y = contentRect.origin.y + contentRect.size.height - textRect.size.height;
             break;
         }
         default:
         {
-            textRect.origin.y = rect.origin.y + (rect.size.height - textRect.size.height)/2.0f;
+            textRect.origin.y = contentRect.origin.y + (contentRect.size.height - textRect.size.height)/2.0f;
             break;
         }
     }
@@ -327,11 +340,11 @@
     ![self.shadowColor isEqual:[UIColor clearColor]] &&
     (shadowBlur > 0.0f || !CGSizeEqualToSize(self.shadowOffset, CGSizeZero));
     
-    BOOL hasInnerShadow = innerShadowColor &&
-    ![self.innerShadowColor isEqual:[UIColor clearColor]] &&
-    !CGSizeEqualToSize(innerShadowOffset, CGSizeZero);
+    BOOL hasInnerShadow = _innerShadowColor &&
+    ![_innerShadowColor isEqual:[UIColor clearColor]] &&
+    !CGSizeEqualToSize(_innerShadowOffset, CGSizeZero);
     
-    BOOL hasGradient = [gradientColors count] > 1;
+    BOOL hasGradient = [_gradientColors count] > 1;
     
     BOOL needsMask = hasInnerShadow || hasGradient;
     
@@ -340,7 +353,7 @@
     {
         //draw mask
         CGContextSaveGState(context);
-        [self.text drawInRect:textRect withFont:font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
+        [self drawTextInRect:textRect withFont:font];
         CGContextRestoreGState(context);
         
         // Create an image mask from what we've drawn so far
@@ -357,40 +370,40 @@
         CGFloat textAlpha = CGColorGetAlpha(textColor.CGColor);
         CGContextSetShadowWithColor(context, self.shadowOffset, shadowBlur, self.shadowColor.CGColor);
         [needsMask? [self.shadowColor colorWithAlphaComponent:textAlpha]: textColor setFill];
-        [self.text drawInRect:textRect withFont:font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
+        [self drawTextInRect:textRect withFont:font];
         CGContextRestoreGState(context);
     }
     else if (!needsMask)
     {
         //just draw the text
         [textColor setFill];
-        [self.text drawInRect:textRect withFont:font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
+        [self drawTextInRect:textRect withFont:font];
     }
     
     if (needsMask)
     {
         //clip the context
         CGContextSaveGState(context);
-        CGContextTranslateCTM(context, 0, rect.size.height);
+        CGContextTranslateCTM(context, 0, contentRect.size.height);
         CGContextScaleCTM(context, 1.0, -1.0);
-        CGContextClipToMask(context, rect, alphaMask);
+        CGContextClipToMask(context, contentRect, alphaMask);
         
         if (hasInnerShadow)
         {
             //fill inner shadow
-            [innerShadowColor setFill];
+            [_innerShadowColor setFill];
             CGContextFillRect(context, textRect);
             
             //clip to unshadowed part
-            CGContextTranslateCTM(context, innerShadowOffset.width, -innerShadowOffset.height);
-            CGContextClipToMask(context, rect, alphaMask);
+            CGContextTranslateCTM(context, _innerShadowOffset.width, -_innerShadowOffset.height);
+            CGContextClipToMask(context, contentRect, alphaMask);
         }
         
         if (hasGradient)
         {
             //create array of pre-blended CGColors
-            NSMutableArray *colors = [NSMutableArray arrayWithCapacity:[gradientColors count]];
-            for (UIColor *color in gradientColors)
+            NSMutableArray *colors = [NSMutableArray arrayWithCapacity:[_gradientColors count]];
+            for (UIColor *color in _gradientColors)
             {
                 UIColor *blended = [self color:color.CGColor blendedWithColor:textColor.CGColor];
                 [colors addObject:(__bridge id)blended.CGColor];
@@ -398,12 +411,12 @@
             
             //draw gradient
             CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextTranslateCTM(context, 0, -rect.size.height);
+            CGContextTranslateCTM(context, 0, -contentRect.size.height);
             CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)colors, NULL);
-            CGPoint startPoint = CGPointMake(textRect.origin.x + gradientStartPoint.x * textRect.size.width,
-                                             textRect.origin.y + gradientStartPoint.y * textRect.size.height);
-            CGPoint endPoint = CGPointMake(textRect.origin.x + gradientEndPoint.x * textRect.size.width,
-                                           textRect.origin.y + gradientEndPoint.y * textRect.size.height);
+            CGPoint startPoint = CGPointMake(textRect.origin.x + _gradientStartPoint.x * textRect.size.width,
+                                             textRect.origin.y + _gradientStartPoint.y * textRect.size.height);
+            CGPoint endPoint = CGPointMake(textRect.origin.x + _gradientEndPoint.x * textRect.size.width,
+                                           textRect.origin.y + _gradientEndPoint.y * textRect.size.height);
             CGContextDrawLinearGradient(context, gradient, startPoint, endPoint,
                                         kCGGradientDrawsAfterEndLocation | kCGGradientDrawsBeforeStartLocation);
             CGGradientRelease(gradient);
@@ -420,7 +433,7 @@
         CGImageRelease(alphaMask);
     }
     
-    if (oversampling)
+    if (subcontext)
     {
         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
@@ -430,8 +443,8 @@
 
 - (void)dealloc
 {
-    [innerShadowColor release];
-    [gradientColors release];
+    [_innerShadowColor release];
+    [_gradientColors release];
     [super ah_dealloc];
 }
 
