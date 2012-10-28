@@ -1,3 +1,7 @@
+Version 1.3.7
+
+- Moved ARCHelper macros out of .h file so they do not affect non-ARC code in other classes
+
 Version 1.3.6
 
 - Fixed bug with baseline alignment when text is autoshrunk

@@ -19,7 +19,7 @@ NOTE: 'Supported' means that the library has been tested with this version. 'Com
 ARC Compatibility
 ------------------
 
-FXLabel makes use of the ARC Helper library to automatically work with both ARC and non-ARC projects through conditional compilation. There is no need to exclude FXLabel files from the ARC validation process, or to convert FXLabel using the ARC conversion tool.
+FXLabel automatically works with both ARC and non-ARC projects through conditional compilation. There is no need to exclude FXLabel files from the ARC validation process, or to convert FXLabel using the ARC conversion tool.
 
 
 Installation
