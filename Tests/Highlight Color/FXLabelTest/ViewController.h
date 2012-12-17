@@ -11,7 +11,7 @@
 
 @interface ViewController : UIViewController
 
-@property (nonatomic, retain) IBOutlet FXLabel *label;
+@property (nonatomic, strong) IBOutlet FXLabel *label;
 
 - (IBAction)toggleHighlight;
 

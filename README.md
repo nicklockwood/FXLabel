@@ -11,7 +11,7 @@ Supported iOS & SDK Versions
 
 * Supported build target - iOS 6.0 / Mac OS 10.7 (Xcode 4.5, Apple LLVM compiler 4.1)
 * Earliest supported deployment target - iOS 5.0 / Mac OS 10.6
-* Earliest compatible deployment target - iOS 3.0
+* Earliest compatible deployment target - iOS 4.3
 
 NOTE: 'Supported' means that the library has been tested with this version. 'Compatible' means that the library should work on this iOS version (i.e. it doesn't rely on any unavailable SDK features) but is no longer being tested for compatibility and may require tweaking or bug fixes to run correctly.
 
@@ -19,7 +19,9 @@ NOTE: 'Supported' means that the library has been tested with this version. 'Com
 ARC Compatibility
 ------------------
 
-FXLabel automatically works with both ARC and non-ARC projects through conditional compilation. There is no need to exclude FXLabel files from the ARC validation process, or to convert FXLabel using the ARC conversion tool.
+As of version 1.4, FXLabel requires ARC. If you wish to use FXLabel in a non-ARC project, just add the -fobjc-arc compiler flag to the FXLabel.m class. To do this, go to the Build Phases tab in your target settings, open the Compile Sources group, double-click FXLabel.m in the list and type -fobjc-arc into the popover.
+
+If you wish to convert your whole project to ARC, comment out the #error line in FXLabel.m, then run the Edit > Refactor > Convert to Objective-C ARC... tool in Xcode and make sure all files that you wish to use ARC for (including FXLabel.m) are checked.
 
 
 Installation

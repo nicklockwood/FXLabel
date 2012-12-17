@@ -62,14 +62,5 @@
     [super viewDidUnload];
 }
 
-- (void)dealloc
-{
-    [label release];
-    [oversamplingLabel release];
-    [oversamplingSlider release];
-    [fontSizeLabel release];
-    [fontSizeSlider release];
-    [super dealloc];
-}
 
 @end

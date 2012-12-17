@@ -37,11 +37,5 @@
     [super viewDidUnload];
 }
 
-- (void)dealloc
-{
-    [label1 release];
-    [label2 release];
-    [super dealloc];
-}
 
 @end

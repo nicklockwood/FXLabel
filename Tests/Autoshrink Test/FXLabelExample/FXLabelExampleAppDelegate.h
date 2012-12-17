@@ -12,7 +12,7 @@
 
 @interface FXLabelExampleAppDelegate : NSObject <UIApplicationDelegate>
 
-@property (nonatomic) IBOutlet UIWindow *window;
-@property (nonatomic) IBOutlet FXLabelExampleViewController *viewController;
+@property (strong, nonatomic) IBOutlet UIWindow *window;
+@property (strong, nonatomic) IBOutlet FXLabelExampleViewController *viewController;
 
 @end

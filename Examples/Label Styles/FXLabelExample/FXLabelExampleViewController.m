@@ -16,7 +16,6 @@
 @synthesize label4;
 @synthesize label5;
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -41,15 +40,13 @@
     //demonstrate multi-part gradient
     label4.gradientStartPoint = CGPointMake(0.0f, 0.0f);
     label4.gradientEndPoint = CGPointMake(1.0f, 1.0f);
-    label4.gradientColors = [NSArray arrayWithObjects:
-                             [UIColor redColor],
+    label4.gradientColors = @[[UIColor redColor],
                              [UIColor yellowColor],
                              [UIColor greenColor],
                              [UIColor cyanColor],
                              [UIColor blueColor],
                              [UIColor purpleColor],
-                             [UIColor redColor],
-                             nil];
+                             [UIColor redColor]];
     
     //everything
     label5.shadowColor = [UIColor blackColor];
@@ -74,14 +71,5 @@
     [super viewDidUnload];
 }
 
-- (void)dealloc
-{
-    [label1 release];
-    [label2 release];
-    [label3 release];
-    [label4 release];
-    [label5 release];
-    [super dealloc];
-}
 
 @end

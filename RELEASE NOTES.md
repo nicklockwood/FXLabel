@@ -1,3 +1,8 @@
+Version 1.4 beta
+
+- FXLabel now requires ARC (see README for details)
+- Improved layout algorithm to more closely match UILabel behaviour for single-line labels.
+
 Version 1.3.7
 
 - Moved ARCHelper macros out of .h file so they do not affect non-ARC code in other classes

@@ -12,10 +12,10 @@
 
 @interface FXLabelExampleViewController : UIViewController
 
-@property (nonatomic, retain) IBOutlet FXLabel *label1;
-@property (nonatomic, retain) IBOutlet FXLabel *label2;
-@property (nonatomic, retain) IBOutlet FXLabel *label3;
-@property (nonatomic, retain) IBOutlet FXLabel *label4;
-@property (nonatomic, retain) IBOutlet FXLabel *label5;
+@property (nonatomic, strong) IBOutlet FXLabel *label1;
+@property (nonatomic, strong) IBOutlet FXLabel *label2;
+@property (nonatomic, strong) IBOutlet FXLabel *label3;
+@property (nonatomic, strong) IBOutlet FXLabel *label4;
+@property (nonatomic, strong) IBOutlet FXLabel *label5;
 
 @end
