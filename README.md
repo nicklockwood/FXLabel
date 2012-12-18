@@ -9,8 +9,8 @@ FXLabel improves upon the standard UILabel by providing a subclass that supports
 Supported iOS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 6.0 / Mac OS 10.7 (Xcode 4.5, Apple LLVM compiler 4.1)
-* Earliest supported deployment target - iOS 5.0 / Mac OS 10.6
+* Supported build target - iOS 6.0 (Xcode 4.5, Apple LLVM compiler 4.1)
+* Earliest supported deployment target - iOS 5.0
 * Earliest compatible deployment target - iOS 4.3
 
 NOTE: 'Supported' means that the library has been tested with this version. 'Compatible' means that the library should work on this iOS version (i.e. it doesn't rely on any unavailable SDK features) but is no longer being tested for compatibility and may require tweaking or bug fixes to run correctly.
