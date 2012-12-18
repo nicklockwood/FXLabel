@@ -141,7 +141,7 @@
 		0B8B2D2114887CC500BFD0BC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 0B8B2D2414887CC500BFD0BC /* Build configuration list for PBXProject "Highlight Test" */;
 			compatibilityVersion = "Xcode 3.2";

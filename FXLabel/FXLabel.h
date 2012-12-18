@@ -1,7 +1,7 @@
 //
 //  FXLabel.h
 //
-//  Version 1.4
+//  Version 1.4.1
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -56,9 +56,9 @@
 
 @property (nonatomic) CGFloat shadowBlur;
 @property (nonatomic) CGSize innerShadowOffset;
-@property (nonatomic) UIColor *innerShadowColor;
-@property (nonatomic) UIColor *gradientStartColor;
-@property (nonatomic) UIColor *gradientEndColor;
+@property (nonatomic, strong) UIColor *innerShadowColor;
+@property (nonatomic, strong) UIColor *gradientStartColor;
+@property (nonatomic, strong) UIColor *gradientEndColor;
 @property (nonatomic, copy) NSArray *gradientColors;
 @property (nonatomic) CGPoint gradientStartPoint;
 @property (nonatomic) CGPoint gradientEndPoint;
@@ -66,5 +66,7 @@
 @property (nonatomic) UIEdgeInsets textInsets;
 @property (nonatomic) CGFloat lineSpacing;
 @property (nonatomic) BOOL allowOrphans;
+
+- (void)setUp;
 
 @end

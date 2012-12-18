@@ -66,7 +66,7 @@ The softness of the text shadow. Defaults to zero, which creates a hard shadow, 
 	
 The offset for the inner shadow. Works the same way as shadowOffset. Currently only hard-edged inner shadows are supported.
 	
-	@property (nonatomic) UIColor *innerShadowColor;
+	@property (nonatomic, strong) UIColor *innerShadowColor;
 	
 The colour of the inner shadow.
 
@@ -74,11 +74,11 @@ The colour of the inner shadow.
 	
 An array of colors used to produce a gradient effect across the text. The minimum number of gradient colours you can specify is two - if the array contains fewer than two colours it will be ignored. If the alpha component of any of the colours is less than 1.0, it will be blended with the textColor. Patterned, indexed or HSV colours are not supported. The direction of the gradient is controlled by the gradientStartPoint and gradientEndPoint properties. The default direction is vertical.
 	
-	@property (nonatomic) UIColor *gradientStartColor;
+	@property (nonatomic, strong) UIColor *gradientStartColor;
 	
 The starting/upper color of the gradient. This property is just a convenience accessor for the first element in the gradientColors array.
 	
-	@property (nonatomic) UIColor *gradientEndColor;
+	@property (nonatomic, strong) UIColor *gradientEndColor;
 	
 The ending/lower color of the gradient. This property is just a convenience accessor for the last element in the gradientColors array.
 
@@ -105,6 +105,14 @@ The lineSpacing property allows you to control the amount of space between lines
     @property (nonatomic) BOOL allowOrphans;
     
 The allowOrphans property allows you to prevent a common layout issue where a word ends up on its own on the last line of a paragraph. By default, allowOrphans is set to YES, but if you set it to NO, FXLabel will automatically ensure that a minimum of two words will appear on the last line of each paragraph.
+
+
+FXLabel methods
+----------------
+
+    - (void)setUp;
+
+You should not call this method directly. It is called when an FXlabel instance is created, either in code or from a nib file. You can override this method when subclassing instead of having to duplicate your setup code in `initWithFrame:` and `initWithCoder:` (be sure to call `[super setUp]` in your implementation.
 
 	
 Notes

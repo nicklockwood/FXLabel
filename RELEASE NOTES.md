@@ -1,3 +1,8 @@
+Version 1.4.1
+
+- Fixed a bug when deployment target < 6.0
+- Made setUp method public to aid subclassing.
+
 Version 1.4
 
 - FXLabel now requires ARC (see README for details)

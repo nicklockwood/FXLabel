@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.4
+//  Version 1.4.1
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -359,7 +359,7 @@
         
 #else
         
-        CGFloat minimumFontSize = self.minimumScaleFactor? self.minimumScaleFactor * fontSize: self.font.pointSize;
+        CGFloat minimumFontSize = self.minimumScaleFactor? self.minimumScaleFactor * self.font.pointSize: self.font.pointSize;
         
 #endif
         size = [self.text sizeWithFont:self.font
