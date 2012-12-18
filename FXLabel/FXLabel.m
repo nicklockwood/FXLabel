@@ -40,6 +40,249 @@
 #endif
 
 
+@implementation NSString (FXLabelDrawing)
+
++ (BOOL)FXLabel_isPunctuation:(NSString *)word
+{
+    return [[NSSet setWithObjects:
+             @"-", //hyphen
+             @"–", //en-dash
+             @"—", //em-dash
+             @";",
+             nil] containsObject:word];
+}
+
++ (NSArray *)FXLabel_linesWithWords:(NSArray *)words
+                               font:(UIFont *)font
+                  constrainedToSize:(CGSize)size
+                      lineBreakMode:(NSLineBreakMode)lineBreakMode
+                        lineSpacing:(CGFloat)lineSpacing
+                   characterSpacing:(CGFloat)characterSpacing
+                       allowOrphans:(BOOL)allowOrphans
+{
+    //TODO: handle character spacing
+    //TODO: handle lineBreakMode of type NSLineBreakByClipping or NSLineBreakByCharWrapping
+
+    //calculate lines
+    NSInteger index = 0;
+    NSMutableArray *lines = [NSMutableArray array];
+    for (int j = 0; index < [words count]; j++)
+    {
+        NSInteger lineCount = [lines count];
+        if (((lineCount + 1) * font.lineHeight + lineCount * lineSpacing) > size.height)
+        {
+            //append next word to last line
+            NSString *word = words[j];
+            NSString *line = [lines lastObject];
+            NSString *newLine = line? [line stringByAppendingFormat:@" %@", word]: word;
+            if (newLine) [lines replaceObjectAtIndex:[lines count] - 1 withObject:newLine];
+            break;
+        }
+        NSString *line = nil;
+        for (int i = index; i < [words count]; i++)
+        {
+            NSString *word = words[i];
+            NSString *newLine = line? [line stringByAppendingFormat:@" %@", word]: word;
+            CGFloat lineWidth = [newLine sizeWithFont:font
+                                             forWidth:INFINITY
+                                        lineBreakMode:lineBreakMode
+                                     characterSpacing:characterSpacing].width;
+            
+            if ([word isEqualToString:@"\n"])
+            {
+                //add line and prepare for next
+                [lines addObject:line ?: @""];
+                index = i + 1;
+                break;
+            }
+            else if (lineWidth > size.width)
+            {
+                //check for orphans
+                if (!allowOrphans && i > 0 &&
+                    (i == [words count] - 1 || [words[i + 1] isEqualToString:@"\n"]) &&
+                    ![self FXLabel_isPunctuation:words[i - 1]])
+                {
+                    //force line break
+                    NSRange range = [line rangeOfString:@" " options:NSBackwardsSearch];
+                    if (range.location != NSNotFound)
+                    {
+                        line = [line substringToIndex:range.location];
+                        i --;
+                    }
+                }
+                
+                //render line and prepare for next
+                [lines addObject:line];
+                index = i;
+                break;
+            }
+            else if (i == [words count] - 1)
+            {
+                //render line and finish
+                [lines addObject:newLine];
+                index = i + 1;
+                break;
+            }
+            else
+            {
+                //continue
+                line = newLine;
+            }
+        }
+    }
+    return lines;
+}
+
+- (NSArray *)FXLabel_words
+{
+    //split text into words
+    NSString *text = [self stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
+	text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@" \n "];
+    NSMutableArray *words = [[text componentsSeparatedByString:@" "] mutableCopy];
+    for (int i = [words count] - 1; i >= 0; i--)
+    {
+        if ([words[i] isEqualToString:@""])
+        {
+            [words removeObjectAtIndex:i];
+        }
+    }
+    return words;
+}
+
+- (CGSize)sizeWithFont:(UIFont *)font
+              forWidth:(CGFloat)width
+         lineBreakMode:(NSLineBreakMode)lineBreakMode
+      characterSpacing:(CGFloat)characterSpacing
+{
+    return [self sizeWithFont:font
+                  minFontSize:font.pointSize
+               actualFontSize:NULL
+                     forWidth:width
+                lineBreakMode:lineBreakMode
+             characterSpacing:characterSpacing];
+}
+
+- (CGSize)sizeWithFont:(UIFont *)font
+           minFontSize:(CGFloat)minFontSize
+        actualFontSize:(CGFloat *)actualFontSize
+              forWidth:(CGFloat)width
+         lineBreakMode:(NSLineBreakMode)lineBreakMode
+      characterSpacing:(CGFloat)characterSpacing
+{
+    //TODO: character spacing
+    return [self sizeWithFont:font
+                  minFontSize:minFontSize
+               actualFontSize:actualFontSize
+                     forWidth:width
+                lineBreakMode:lineBreakMode];
+}
+
+- (CGSize)sizeWithFont:(UIFont *)font
+     constrainedToSize:(CGSize)size
+         lineBreakMode:(NSLineBreakMode)lineBreakMode
+           lineSpacing:(CGFloat)lineSpacing
+      characterSpacing:(CGFloat)characterSpacing
+          allowOrphans:(BOOL)allowOrphans
+{
+    NSArray *words = [self FXLabel_words];
+    NSArray *lines = [[self class] FXLabel_linesWithWords:words
+                                                     font:font
+                                        constrainedToSize:size
+                                            lineBreakMode:lineBreakMode
+                                              lineSpacing:lineSpacing
+                                         characterSpacing:characterSpacing
+                                             allowOrphans:allowOrphans];
+    CGSize total = CGSizeZero;
+    total.height = MIN(size.height, [lines count] * font.lineHeight + ([lines count] - 1) * lineSpacing);
+    for (NSString *line in lines)
+    {
+        total.width = MAX(total.width, [line sizeWithFont:font
+                                                 forWidth:size.width
+                                            lineBreakMode:lineBreakMode
+                                         characterSpacing:characterSpacing].width);
+    }
+    return total;
+}
+
+- (CGSize)drawAtPoint:(CGPoint)point
+             forWidth:(CGFloat)width
+             withFont:(UIFont *)font
+        lineBreakMode:(NSLineBreakMode)lineBreakMode
+     characterSpacing:(CGFloat)characterSpacing
+{
+    return [self drawAtPoint:point forWidth:width
+                    withFont:font
+                 minFontSize:font.pointSize
+              actualFontSize:NULL
+               lineBreakMode:lineBreakMode
+          baselineAdjustment:UIBaselineAdjustmentNone
+            characterSpacing:characterSpacing];
+}
+
+- (CGSize)drawAtPoint:(CGPoint)point
+             forWidth:(CGFloat)width
+             withFont:(UIFont *)font
+          minFontSize:(CGFloat)minFontSize
+       actualFontSize:(CGFloat *)actualFontSize
+        lineBreakMode:(NSLineBreakMode)lineBreakMode
+   baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
+     characterSpacing:(CGFloat)characterSpacing
+{
+    //TODO: character spacing
+    return [self drawAtPoint:point forWidth:width
+                    withFont:font
+                 minFontSize:minFontSize
+              actualFontSize:actualFontSize
+               lineBreakMode:lineBreakMode
+          baselineAdjustment:baselineAdjustment];
+}
+
+- (CGSize)drawInRect:(CGRect)rect
+            withFont:(UIFont *)font
+       lineBreakMode:(NSLineBreakMode)lineBreakMode
+           alignment:(NSTextAlignment)alignment
+         lineSpacing:(CGFloat)lineSpacing
+    characterSpacing:(CGFloat)characterSpacing
+        allowOrphans:(BOOL)allowOrphans
+
+{
+    NSArray *words = [self FXLabel_words];
+    NSArray *lines = [[self class] FXLabel_linesWithWords:words
+                                                     font:font
+                                                 constrainedToSize:rect.size
+                                            lineBreakMode:lineBreakMode
+                                              lineSpacing:lineSpacing
+                                         characterSpacing:characterSpacing
+                                             allowOrphans:allowOrphans];
+    CGSize total = CGSizeZero;
+    total.height = [lines count] * font.lineHeight + ([lines count] - 1) * lineSpacing;
+    CGPoint offset = rect.origin;
+    for (NSString *line in lines)
+    {
+        CGSize size = [line sizeWithFont:font
+                                forWidth:CGRectGetWidth(rect)
+                           lineBreakMode:lineBreakMode
+                        characterSpacing:characterSpacing];
+        
+        offset.x = roundf(rect.origin.x + (CGRectGetWidth(rect) - size.width)/ 2.0f);
+        [line drawAtPoint:offset
+                 forWidth:CGRectGetWidth(rect)
+                 withFont:font
+              minFontSize:font.pointSize
+           actualFontSize:NULL
+            lineBreakMode:lineBreakMode
+       baselineAdjustment:UIBaselineAdjustmentAlignBaselines
+         characterSpacing:characterSpacing];
+        
+        total.width = MAX(total.width, offset.x + size.width);
+        offset.y += font.lineHeight + lineSpacing;
+    }
+    return total;
+}
+
+@end
+
+
 @interface FXLabel ()
 
 @property (nonatomic, assign) NSUInteger minSamples;
@@ -52,7 +295,7 @@
 
 @synthesize shadowBlur; //no _ to avoid conflict with private property
 
-- (void)setDefaults
+- (void)setUp
 {
     _gradientStartPoint = CGPointMake(0.5f, 0.0f);
     _gradientEndPoint = CGPointMake(0.5f, 0.75f);
@@ -63,6 +306,7 @@
         _maxSamples = 32;
     }
     _oversampling = _minSamples;
+    _allowOrphans = YES;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -70,7 +314,7 @@
     if ((self = [super initWithFrame:frame]))
     {
         self.backgroundColor = nil;
-        [self setDefaults];
+        [self setUp];
     }
     return self;
 }
@@ -79,7 +323,7 @@
 {
     if ((self = [super initWithCoder:aDecoder]))
     {
-        [self setDefaults];
+        [self setUp];
     }
     return self;
 }
@@ -176,7 +420,25 @@
     }
 }
 
-- (void)getComponents:(CGFloat *)rgba forColor:(CGColorRef)color
+- (void)setLineSpacing:(CGFloat)lineSpacing
+{
+    if (_lineSpacing != lineSpacing)
+    {
+        _lineSpacing = lineSpacing;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void)setCharacterSpacing:(CGFloat)characterSpacing
+{
+    if (_characterSpacing != characterSpacing)
+    {
+        _characterSpacing = characterSpacing;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void)FXLabel_getComponents:(CGFloat *)rgba forColor:(CGColorRef)color
 {
     CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color));
     const CGFloat *components = CGColorGetComponents(color);
@@ -210,12 +472,12 @@
     }
 }
 
-- (UIColor *)color:(CGColorRef)a blendedWithColor:(CGColorRef)b
+- (UIColor *)FXLabel_color:(CGColorRef)a blendedWithColor:(CGColorRef)b
 {
     CGFloat aRGBA[4];
-    [self getComponents:aRGBA forColor:a];
+    [self FXLabel_getComponents:aRGBA forColor:a];
     CGFloat bRGBA[4];
-    [self getComponents:bRGBA forColor:b];
+    [self FXLabel_getComponents:bRGBA forColor:b];
     CGFloat source = aRGBA[3];
     CGFloat dest = 1.0f - source;
     return [UIColor colorWithRed:source * aRGBA[0] + dest * bRGBA[0]
@@ -224,15 +486,15 @@
                            alpha:bRGBA[3] + (1.0f - bRGBA[3]) * aRGBA[3]];
 }
 
-- (void)drawTextInRect:(CGRect)rect withFont:(UIFont *)font lineBreakMode:(int)lineBreakMode
+- (void)FXLabel_drawTextInRect:(CGRect)rect withFont:(UIFont *)font
 {
     if (self.numberOfLines == 1)
     {
-        [self.text drawAtPoint:rect.origin forWidth:rect.size.width withFont:self.font minFontSize:font.pointSize actualFontSize:NULL lineBreakMode:lineBreakMode baselineAdjustment:self.baselineAdjustment];
+        [self.text drawAtPoint:rect.origin forWidth:rect.size.width withFont:self.font minFontSize:font.pointSize actualFontSize:NULL lineBreakMode:self.lineBreakMode baselineAdjustment:self.baselineAdjustment characterSpacing:_characterSpacing];
     }
     else
     {
-        [self.text drawInRect:rect withFont:font lineBreakMode:lineBreakMode alignment:self.textAlignment];
+        [self.text drawInRect:rect withFont:font lineBreakMode:self.lineBreakMode alignment:self.textAlignment lineSpacing:_lineSpacing characterSpacing:_characterSpacing allowOrphans:_allowOrphans];
     }
 }
 
@@ -257,15 +519,13 @@
     CGRect textRect = contentRect;
     CGFloat fontSize = self.font.pointSize;
     
-#if __IPHONE_OS_VERSION_MIN_REQUIRED == __IPHONE_6_0
-    
-    CGFloat minimumFontSize = self.minimumScaleFactor? self.minimumScaleFactor * fontSize: fontSize;
-    NSLineBreakMode lineBreakMode = (self.numberOfLines == 1)? NSLineBreakByTruncatingTail: self.lineBreakMode;
-
-#else
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
     
     CGFloat minimumFontSize = self.minimumFontSize ?: fontSize;
-    UILineBreakMode lineBreakMode = (self.numberOfLines == 1)? UILineBreakModeTailTruncation: self.lineBreakMode;
+
+#else
+
+    CGFloat minimumFontSize = self.minimumScaleFactor? self.minimumScaleFactor * fontSize: fontSize;
 
 #endif
     
@@ -275,66 +535,28 @@
                                     minFontSize:minimumFontSize
                                  actualFontSize:&fontSize
                                        forWidth:contentRect.size.width
-                                  lineBreakMode:lineBreakMode];
+                                  lineBreakMode:NSLineBreakByTruncatingTail
+                               characterSpacing:_characterSpacing];
     }
     else
     {
         textRect.size = [self.text sizeWithFont:self.font
                               constrainedToSize:contentRect.size
-                                  lineBreakMode:lineBreakMode];
+                                  lineBreakMode:self.lineBreakMode
+                                    lineSpacing:_lineSpacing
+                               characterSpacing:_characterSpacing
+                                   allowOrphans:_allowOrphans];
     }
     
     //set font
     UIFont *font = [self.font fontWithSize:fontSize];
-    
-    //set position
-    switch (self.textAlignment)
-    {
-        case NSTextAlignmentCenter:
-        {
-            textRect.origin.x = contentRect.origin.x + (contentRect.size.width - textRect.size.width) / 2.0f;
-            break;
-        }
-        case NSTextAlignmentRight:
-        {
-            textRect.origin.x = contentRect.origin.x + contentRect.size.width - textRect.size.width;
-            break;
-        }
-        default:
-        {
-            textRect.origin.x = contentRect.origin.x;
-            break;
-        }
-    }
-    switch (self.contentMode)
-    {
-        case UIViewContentModeTop:
-        case UIViewContentModeTopLeft:
-        case UIViewContentModeTopRight:
-        {
-            textRect.origin.y = contentRect.origin.y;
-            break;
-        }
-        case UIViewContentModeBottom:
-        case UIViewContentModeBottomLeft:
-        case UIViewContentModeBottomRight:
-        {
-            textRect.origin.y = contentRect.origin.y + contentRect.size.height - textRect.size.height;
-            break;
-        }
-        default:
-        {
-            textRect.origin.y = contentRect.origin.y + (contentRect.size.height - textRect.size.height)/2.0f;
-            break;
-        }
-    }
 
     //set color
     UIColor *highlightedColor = self.highlightedTextColor ?: self.textColor;
     UIColor *textColor = self.highlighted? highlightedColor: self.textColor;
     textColor = textColor ?: [UIColor clearColor];
     
-    //set position
+    //set alignment
     switch (self.textAlignment)
     {
         case NSTextAlignmentCenter:
@@ -393,7 +615,7 @@
     {
         //draw mask
         CGContextSaveGState(context);
-        [self drawTextInRect:textRect withFont:font lineBreakMode:lineBreakMode];
+        [self FXLabel_drawTextInRect:textRect withFont:font];
         CGContextRestoreGState(context);
         
         // Create an image mask from what we've drawn so far
@@ -410,14 +632,14 @@
         CGFloat textAlpha = CGColorGetAlpha(textColor.CGColor);
         CGContextSetShadowWithColor(context, self.shadowOffset, shadowBlur, self.shadowColor.CGColor);
         [needsMask? [self.shadowColor colorWithAlphaComponent:textAlpha]: textColor setFill];
-        [self drawTextInRect:textRect withFont:font lineBreakMode:lineBreakMode];
+        [self FXLabel_drawTextInRect:textRect withFont:font];
         CGContextRestoreGState(context);
     }
     else if (!needsMask)
     {
         //just draw the text
         [textColor setFill];
-        [self drawTextInRect:textRect withFont:font lineBreakMode:lineBreakMode];
+        [self FXLabel_drawTextInRect:textRect withFont:font];
     }
     
     if (needsMask)
@@ -445,7 +667,7 @@
             NSMutableArray *colors = [NSMutableArray arrayWithCapacity:[_gradientColors count]];
             for (UIColor *color in _gradientColors)
             {
-                UIColor *blended = [self color:color.CGColor blendedWithColor:textColor.CGColor];
+                UIColor *blended = [self FXLabel_color:color.CGColor blendedWithColor:textColor.CGColor];
                 [colors addObject:(__bridge id)blended.CGColor];
             }
             

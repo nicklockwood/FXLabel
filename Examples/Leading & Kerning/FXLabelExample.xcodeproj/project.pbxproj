@@ -1,0 +1,321 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01924544160E11CE005A22BB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01924543160E11CE005A22BB /* Default-568h@2x.png */; };
+		01FAC1001400668500B63C5B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FAC0FF1400668500B63C5B /* UIKit.framework */; };
+		01FAC1021400668500B63C5B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FAC1011400668500B63C5B /* Foundation.framework */; };
+		01FAC1041400668500B63C5B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FAC1031400668500B63C5B /* CoreGraphics.framework */; };
+		01FAC10A1400668500B63C5B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01FAC1081400668500B63C5B /* InfoPlist.strings */; };
+		01FAC10C1400668500B63C5B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FAC10B1400668500B63C5B /* main.m */; };
+		01FAC1101400668500B63C5B /* FXLabelExampleAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FAC10F1400668500B63C5B /* FXLabelExampleAppDelegate.m */; };
+		01FAC1131400668500B63C5B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01FAC1111400668500B63C5B /* MainWindow.xib */; };
+		01FAC1161400668500B63C5B /* FXLabelExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FAC1151400668500B63C5B /* FXLabelExampleViewController.m */; };
+		01FAC1191400668500B63C5B /* FXLabelExampleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01FAC1171400668500B63C5B /* FXLabelExampleViewController.xib */; };
+		01FF021B146985FE00765E29 /* FXLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FF021A146985FE00765E29 /* FXLabel.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		01924543160E11CE005A22BB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		01FAC0FB1400668500B63C5B /* FXLabelExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FXLabelExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		01FAC0FF1400668500B63C5B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		01FAC1011400668500B63C5B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		01FAC1031400668500B63C5B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		01FAC1071400668500B63C5B /* FXLabelExample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FXLabelExample-Info.plist"; sourceTree = "<group>"; };
+		01FAC1091400668500B63C5B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		01FAC10B1400668500B63C5B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		01FAC10D1400668500B63C5B /* FXLabelExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FXLabelExample-Prefix.pch"; sourceTree = "<group>"; };
+		01FAC10E1400668500B63C5B /* FXLabelExampleAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FXLabelExampleAppDelegate.h; sourceTree = "<group>"; };
+		01FAC10F1400668500B63C5B /* FXLabelExampleAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FXLabelExampleAppDelegate.m; sourceTree = "<group>"; };
+		01FAC1121400668500B63C5B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		01FAC1141400668500B63C5B /* FXLabelExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FXLabelExampleViewController.h; sourceTree = "<group>"; };
+		01FAC1151400668500B63C5B /* FXLabelExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FXLabelExampleViewController.m; sourceTree = "<group>"; };
+		01FAC1181400668500B63C5B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FXLabelExampleViewController.xib; sourceTree = "<group>"; };
+		01FF0219146985FE00765E29 /* FXLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXLabel.h; sourceTree = "<group>"; };
+		01FF021A146985FE00765E29 /* FXLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXLabel.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		01FAC0F81400668500B63C5B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01FAC1001400668500B63C5B /* UIKit.framework in Frameworks */,
+				01FAC1021400668500B63C5B /* Foundation.framework in Frameworks */,
+				01FAC1041400668500B63C5B /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01FAC0F01400668500B63C5B = {
+			isa = PBXGroup;
+			children = (
+				01FF0218146985FE00765E29 /* FXLabel */,
+				01FAC1051400668500B63C5B /* FXLabelExample */,
+				01FAC0FE1400668500B63C5B /* Frameworks */,
+				01FAC0FC1400668500B63C5B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		01FAC0FC1400668500B63C5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				01FAC0FB1400668500B63C5B /* FXLabelExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		01FAC0FE1400668500B63C5B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				01FAC0FF1400668500B63C5B /* UIKit.framework */,
+				01FAC1011400668500B63C5B /* Foundation.framework */,
+				01FAC1031400668500B63C5B /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		01FAC1051400668500B63C5B /* FXLabelExample */ = {
+			isa = PBXGroup;
+			children = (
+				01FAC10E1400668500B63C5B /* FXLabelExampleAppDelegate.h */,
+				01FAC10F1400668500B63C5B /* FXLabelExampleAppDelegate.m */,
+				01FAC1111400668500B63C5B /* MainWindow.xib */,
+				01FAC1141400668500B63C5B /* FXLabelExampleViewController.h */,
+				01FAC1151400668500B63C5B /* FXLabelExampleViewController.m */,
+				01FAC1171400668500B63C5B /* FXLabelExampleViewController.xib */,
+				01FAC1061400668500B63C5B /* Supporting Files */,
+			);
+			path = FXLabelExample;
+			sourceTree = "<group>";
+		};
+		01FAC1061400668500B63C5B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				01924543160E11CE005A22BB /* Default-568h@2x.png */,
+				01FAC1071400668500B63C5B /* FXLabelExample-Info.plist */,
+				01FAC1081400668500B63C5B /* InfoPlist.strings */,
+				01FAC10B1400668500B63C5B /* main.m */,
+				01FAC10D1400668500B63C5B /* FXLabelExample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		01FF0218146985FE00765E29 /* FXLabel */ = {
+			isa = PBXGroup;
+			children = (
+				01FF0219146985FE00765E29 /* FXLabel.h */,
+				01FF021A146985FE00765E29 /* FXLabel.m */,
+			);
+			name = FXLabel;
+			path = ../../FXLabel;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		01FAC0FA1400668500B63C5B /* FXLabelExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01FAC11C1400668500B63C5B /* Build configuration list for PBXNativeTarget "FXLabelExample" */;
+			buildPhases = (
+				01FAC0F71400668500B63C5B /* Sources */,
+				01FAC0F81400668500B63C5B /* Frameworks */,
+				01FAC0F91400668500B63C5B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FXLabelExample;
+			productName = FXLabelExample;
+			productReference = 01FAC0FB1400668500B63C5B /* FXLabelExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		01FAC0F21400668500B63C5B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+			};
+			buildConfigurationList = 01FAC0F51400668500B63C5B /* Build configuration list for PBXProject "FXLabelExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 01FAC0F01400668500B63C5B;
+			productRefGroup = 01FAC0FC1400668500B63C5B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				01FAC0FA1400668500B63C5B /* FXLabelExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		01FAC0F91400668500B63C5B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01FAC10A1400668500B63C5B /* InfoPlist.strings in Resources */,
+				01FAC1131400668500B63C5B /* MainWindow.xib in Resources */,
+				01FAC1191400668500B63C5B /* FXLabelExampleViewController.xib in Resources */,
+				01924544160E11CE005A22BB /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		01FAC0F71400668500B63C5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01FAC10C1400668500B63C5B /* main.m in Sources */,
+				01FAC1101400668500B63C5B /* FXLabelExampleAppDelegate.m in Sources */,
+				01FAC1161400668500B63C5B /* FXLabelExampleViewController.m in Sources */,
+				01FF021B146985FE00765E29 /* FXLabel.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		01FAC1081400668500B63C5B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				01FAC1091400668500B63C5B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		01FAC1111400668500B63C5B /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				01FAC1121400668500B63C5B /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		01FAC1171400668500B63C5B /* FXLabelExampleViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				01FAC1181400668500B63C5B /* en */,
+			);
+			name = FXLabelExampleViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		01FAC11A1400668500B63C5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		01FAC11B1400668500B63C5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		01FAC11D1400668500B63C5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FXLabelExample/FXLabelExample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "FXLabelExample/FXLabelExample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		01FAC11E1400668500B63C5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FXLabelExample/FXLabelExample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "FXLabelExample/FXLabelExample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		01FAC0F51400668500B63C5B /* Build configuration list for PBXProject "FXLabelExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01FAC11A1400668500B63C5B /* Debug */,
+				01FAC11B1400668500B63C5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		01FAC11C1400668500B63C5B /* Build configuration list for PBXNativeTarget "FXLabelExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01FAC11D1400668500B63C5B /* Debug */,
+				01FAC11E1400668500B63C5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 01FAC0F21400668500B63C5B /* Project object */;
+}

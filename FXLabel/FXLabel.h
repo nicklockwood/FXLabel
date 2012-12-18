@@ -34,17 +34,67 @@
 #import <UIKit/UIKit.h>
 
 
+@interface NSString (FXLabelDrawing)
+
+- (CGSize)sizeWithFont:(UIFont *)font
+              forWidth:(CGFloat)width
+         lineBreakMode:(NSLineBreakMode)lineBreakMode
+         characterSpacing:(CGFloat)characterSpacing;
+
+- (CGSize)sizeWithFont:(UIFont *)font
+           minFontSize:(CGFloat)minFontSize
+        actualFontSize:(CGFloat *)actualFontSize
+              forWidth:(CGFloat)width
+         lineBreakMode:(NSLineBreakMode)lineBreakMode
+      characterSpacing:(CGFloat)characterSpacing;
+
+- (CGSize)sizeWithFont:(UIFont *)font
+     constrainedToSize:(CGSize)size
+         lineBreakMode:(NSLineBreakMode)lineBreakMode
+           lineSpacing:(CGFloat)lineSpacing
+      characterSpacing:(CGFloat)characterSpacing
+          allowOrphans:(BOOL)allowOrphans;
+
+- (CGSize)drawAtPoint:(CGPoint)point
+             forWidth:(CGFloat)width
+             withFont:(UIFont *)font
+        lineBreakMode:(NSLineBreakMode)lineBreakMode
+     characterSpacing:(CGFloat)characterSpacing;
+
+- (CGSize)drawAtPoint:(CGPoint)point
+             forWidth:(CGFloat)width
+             withFont:(UIFont *)font
+          minFontSize:(CGFloat)minFontSize
+       actualFontSize:(CGFloat *)actualFontSize
+        lineBreakMode:(NSLineBreakMode)lineBreakMode
+   baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
+     characterSpacing:(CGFloat)characterSpacing;
+
+- (CGSize)drawInRect:(CGRect)rect
+            withFont:(UIFont *)font
+       lineBreakMode:(NSLineBreakMode)lineBreakMode
+           alignment:(NSTextAlignment)alignment
+         lineSpacing:(CGFloat)lineSpacing
+    characterSpacing:(CGFloat)characterSpacing
+        allowOrphans:(BOOL)allowOrphans;
+
+@end
+
+
 @interface FXLabel : UILabel
 
-@property (nonatomic, assign) CGFloat shadowBlur;
-@property (nonatomic, assign) CGSize innerShadowOffset;
-@property (nonatomic, strong) UIColor *innerShadowColor;
-@property (nonatomic, strong) UIColor *gradientStartColor;
-@property (nonatomic, strong) UIColor *gradientEndColor;
+@property (nonatomic) CGFloat shadowBlur;
+@property (nonatomic) CGSize innerShadowOffset;
+@property (nonatomic) UIColor *innerShadowColor;
+@property (nonatomic) UIColor *gradientStartColor;
+@property (nonatomic) UIColor *gradientEndColor;
 @property (nonatomic, copy) NSArray *gradientColors;
-@property (nonatomic, assign) CGPoint gradientStartPoint;
-@property (nonatomic, assign) CGPoint gradientEndPoint;
-@property (nonatomic, assign) NSUInteger oversampling;
-@property (nonatomic, assign) UIEdgeInsets textInsets;
+@property (nonatomic) CGPoint gradientStartPoint;
+@property (nonatomic) CGPoint gradientEndPoint;
+@property (nonatomic) CGFloat lineSpacing;
+@property (nonatomic) CGFloat characterSpacing;
+@property (nonatomic) NSUInteger oversampling;
+@property (nonatomic) UIEdgeInsets textInsets;
+@property (nonatomic) BOOL allowOrphans;
 
 @end
