@@ -1,7 +1,10 @@
-Version 1.4 beta
+Version 1.4
 
 - FXLabel now requires ARC (see README for details)
-- Improved layout algorithm to more closely match UILabel behaviour for single-line labels.
+- It is now possible to control line spacing for multiline labels
+- FXLabel can now automatically avoid orphans (a single word left alone on the last line of a label)
+- Improved layout algorithm to more closely match UILabel behaviour for single-line labels
+- sizeToFit method now takes textInsets into account
 
 Version 1.3.7
 

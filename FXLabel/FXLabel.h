@@ -1,7 +1,7 @@
 //
 //  FXLabel.h
 //
-//  Version 1.4 beta
+//  Version 1.4
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -37,45 +37,16 @@
 @interface NSString (FXLabelDrawing)
 
 - (CGSize)sizeWithFont:(UIFont *)font
-              forWidth:(CGFloat)width
-         lineBreakMode:(NSLineBreakMode)lineBreakMode
-         characterSpacing:(CGFloat)characterSpacing;
-
-- (CGSize)sizeWithFont:(UIFont *)font
-           minFontSize:(CGFloat)minFontSize
-        actualFontSize:(CGFloat *)actualFontSize
-              forWidth:(CGFloat)width
-         lineBreakMode:(NSLineBreakMode)lineBreakMode
-      characterSpacing:(CGFloat)characterSpacing;
-
-- (CGSize)sizeWithFont:(UIFont *)font
      constrainedToSize:(CGSize)size
          lineBreakMode:(NSLineBreakMode)lineBreakMode
            lineSpacing:(CGFloat)lineSpacing
-      characterSpacing:(CGFloat)characterSpacing
           allowOrphans:(BOOL)allowOrphans;
-
-- (CGSize)drawAtPoint:(CGPoint)point
-             forWidth:(CGFloat)width
-             withFont:(UIFont *)font
-        lineBreakMode:(NSLineBreakMode)lineBreakMode
-     characterSpacing:(CGFloat)characterSpacing;
-
-- (CGSize)drawAtPoint:(CGPoint)point
-             forWidth:(CGFloat)width
-             withFont:(UIFont *)font
-          minFontSize:(CGFloat)minFontSize
-       actualFontSize:(CGFloat *)actualFontSize
-        lineBreakMode:(NSLineBreakMode)lineBreakMode
-   baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
-     characterSpacing:(CGFloat)characterSpacing;
 
 - (CGSize)drawInRect:(CGRect)rect
             withFont:(UIFont *)font
        lineBreakMode:(NSLineBreakMode)lineBreakMode
            alignment:(NSTextAlignment)alignment
          lineSpacing:(CGFloat)lineSpacing
-    characterSpacing:(CGFloat)characterSpacing
         allowOrphans:(BOOL)allowOrphans;
 
 @end
@@ -91,10 +62,9 @@
 @property (nonatomic, copy) NSArray *gradientColors;
 @property (nonatomic) CGPoint gradientStartPoint;
 @property (nonatomic) CGPoint gradientEndPoint;
-@property (nonatomic) CGFloat lineSpacing;
-@property (nonatomic) CGFloat characterSpacing;
 @property (nonatomic) NSUInteger oversampling;
 @property (nonatomic) UIEdgeInsets textInsets;
+@property (nonatomic) CGFloat lineSpacing;
 @property (nonatomic) BOOL allowOrphans;
 
 @end

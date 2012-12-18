@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.4 beta
+//  Version 1.4
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -42,26 +42,35 @@
 
 @implementation NSString (FXLabelDrawing)
 
-+ (BOOL)FXLabel_isPunctuation:(NSString *)word
+- (BOOL)FXLabel_isPunctuation
 {
     return [[NSSet setWithObjects:
              @"-", //hyphen
              @"–", //en-dash
              @"—", //em-dash
              @";",
-             nil] containsObject:word];
+             nil] containsObject:self];
 }
 
-+ (NSArray *)FXLabel_linesWithWords:(NSArray *)words
-                               font:(UIFont *)font
-                  constrainedToSize:(CGSize)size
-                      lineBreakMode:(NSLineBreakMode)lineBreakMode
-                        lineSpacing:(CGFloat)lineSpacing
-                   characterSpacing:(CGFloat)characterSpacing
-                       allowOrphans:(BOOL)allowOrphans
+- (NSArray *)FXLabel_linesWithFont:(UIFont *)font
+                 constrainedToSize:(CGSize)size
+                     lineBreakMode:(NSLineBreakMode)lineBreakMode
+                       lineSpacing:(CGFloat)lineSpacing
+                      allowOrphans:(BOOL)allowOrphans
 {
-    //TODO: handle character spacing
-    //TODO: handle lineBreakMode of type NSLineBreakByClipping or NSLineBreakByCharWrapping
+    //TODO: handle lineBreakMode of type NSLineBreakByCharWrapping
+
+    //split text into words
+    NSString *text = [self stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
+    text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@" \n "];
+    NSMutableArray *words = [[text componentsSeparatedByString:@" "] mutableCopy];
+    for (int i = [words count] - 1; i >= 0; i--)
+    {
+        if ([words[i] isEqualToString:@""])
+        {
+            [words removeObjectAtIndex:i];
+        }
+    }
 
     //calculate lines
     NSInteger index = 0;
@@ -85,8 +94,7 @@
             NSString *newLine = line? [line stringByAppendingFormat:@" %@", word]: word;
             CGFloat lineWidth = [newLine sizeWithFont:font
                                              forWidth:INFINITY
-                                        lineBreakMode:lineBreakMode
-                                     characterSpacing:characterSpacing].width;
+                                        lineBreakMode:lineBreakMode].width;
             
             if ([word isEqualToString:@"\n"])
             {
@@ -100,7 +108,7 @@
                 //check for orphans
                 if (!allowOrphans && i > 0 &&
                     (i == [words count] - 1 || [words[i + 1] isEqualToString:@"\n"]) &&
-                    ![self FXLabel_isPunctuation:words[i - 1]])
+                    ![words[i - 1] FXLabel_isPunctuation])
                 {
                     //force line break
                     NSRange range = [line rangeOfString:@" " options:NSBackwardsSearch];
@@ -133,108 +141,26 @@
     return lines;
 }
 
-- (NSArray *)FXLabel_words
-{
-    //split text into words
-    NSString *text = [self stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
-	text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@" \n "];
-    NSMutableArray *words = [[text componentsSeparatedByString:@" "] mutableCopy];
-    for (int i = [words count] - 1; i >= 0; i--)
-    {
-        if ([words[i] isEqualToString:@""])
-        {
-            [words removeObjectAtIndex:i];
-        }
-    }
-    return words;
-}
-
-- (CGSize)sizeWithFont:(UIFont *)font
-              forWidth:(CGFloat)width
-         lineBreakMode:(NSLineBreakMode)lineBreakMode
-      characterSpacing:(CGFloat)characterSpacing
-{
-    return [self sizeWithFont:font
-                  minFontSize:font.pointSize
-               actualFontSize:NULL
-                     forWidth:width
-                lineBreakMode:lineBreakMode
-             characterSpacing:characterSpacing];
-}
-
-- (CGSize)sizeWithFont:(UIFont *)font
-           minFontSize:(CGFloat)minFontSize
-        actualFontSize:(CGFloat *)actualFontSize
-              forWidth:(CGFloat)width
-         lineBreakMode:(NSLineBreakMode)lineBreakMode
-      characterSpacing:(CGFloat)characterSpacing
-{
-    //TODO: character spacing
-    return [self sizeWithFont:font
-                  minFontSize:minFontSize
-               actualFontSize:actualFontSize
-                     forWidth:width
-                lineBreakMode:lineBreakMode];
-}
-
 - (CGSize)sizeWithFont:(UIFont *)font
      constrainedToSize:(CGSize)size
          lineBreakMode:(NSLineBreakMode)lineBreakMode
            lineSpacing:(CGFloat)lineSpacing
-      characterSpacing:(CGFloat)characterSpacing
           allowOrphans:(BOOL)allowOrphans
 {
-    NSArray *words = [self FXLabel_words];
-    NSArray *lines = [[self class] FXLabel_linesWithWords:words
-                                                     font:font
-                                        constrainedToSize:size
-                                            lineBreakMode:lineBreakMode
-                                              lineSpacing:lineSpacing
-                                         characterSpacing:characterSpacing
-                                             allowOrphans:allowOrphans];
+    NSArray *lines = [self FXLabel_linesWithFont:font
+                               constrainedToSize:size
+                                   lineBreakMode:lineBreakMode
+                                     lineSpacing:lineSpacing
+                                    allowOrphans:allowOrphans];
     CGSize total = CGSizeZero;
     total.height = MIN(size.height, [lines count] * font.lineHeight + ([lines count] - 1) * lineSpacing);
     for (NSString *line in lines)
     {
         total.width = MAX(total.width, [line sizeWithFont:font
                                                  forWidth:size.width
-                                            lineBreakMode:lineBreakMode
-                                         characterSpacing:characterSpacing].width);
+                                            lineBreakMode:lineBreakMode].width);
     }
     return total;
-}
-
-- (CGSize)drawAtPoint:(CGPoint)point
-             forWidth:(CGFloat)width
-             withFont:(UIFont *)font
-        lineBreakMode:(NSLineBreakMode)lineBreakMode
-     characterSpacing:(CGFloat)characterSpacing
-{
-    return [self drawAtPoint:point forWidth:width
-                    withFont:font
-                 minFontSize:font.pointSize
-              actualFontSize:NULL
-               lineBreakMode:lineBreakMode
-          baselineAdjustment:UIBaselineAdjustmentNone
-            characterSpacing:characterSpacing];
-}
-
-- (CGSize)drawAtPoint:(CGPoint)point
-             forWidth:(CGFloat)width
-             withFont:(UIFont *)font
-          minFontSize:(CGFloat)minFontSize
-       actualFontSize:(CGFloat *)actualFontSize
-        lineBreakMode:(NSLineBreakMode)lineBreakMode
-   baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
-     characterSpacing:(CGFloat)characterSpacing
-{
-    //TODO: character spacing
-    return [self drawAtPoint:point forWidth:width
-                    withFont:font
-                 minFontSize:minFontSize
-              actualFontSize:actualFontSize
-               lineBreakMode:lineBreakMode
-          baselineAdjustment:baselineAdjustment];
 }
 
 - (CGSize)drawInRect:(CGRect)rect
@@ -242,18 +168,13 @@
        lineBreakMode:(NSLineBreakMode)lineBreakMode
            alignment:(NSTextAlignment)alignment
          lineSpacing:(CGFloat)lineSpacing
-    characterSpacing:(CGFloat)characterSpacing
         allowOrphans:(BOOL)allowOrphans
-
 {
-    NSArray *words = [self FXLabel_words];
-    NSArray *lines = [[self class] FXLabel_linesWithWords:words
-                                                     font:font
-                                                 constrainedToSize:rect.size
-                                            lineBreakMode:lineBreakMode
-                                              lineSpacing:lineSpacing
-                                         characterSpacing:characterSpacing
-                                             allowOrphans:allowOrphans];
+    NSArray *lines = [self FXLabel_linesWithFont:font
+                               constrainedToSize:rect.size
+                                   lineBreakMode:lineBreakMode
+                                     lineSpacing:lineSpacing
+                                    allowOrphans:allowOrphans];
     CGSize total = CGSizeZero;
     total.height = [lines count] * font.lineHeight + ([lines count] - 1) * lineSpacing;
     CGPoint offset = rect.origin;
@@ -261,8 +182,7 @@
     {
         CGSize size = [line sizeWithFont:font
                                 forWidth:CGRectGetWidth(rect)
-                           lineBreakMode:lineBreakMode
-                        characterSpacing:characterSpacing];
+                           lineBreakMode:lineBreakMode];
         
         offset.x = roundf(rect.origin.x + (CGRectGetWidth(rect) - size.width)/ 2.0f);
         [line drawAtPoint:offset
@@ -271,8 +191,7 @@
               minFontSize:font.pointSize
            actualFontSize:NULL
             lineBreakMode:lineBreakMode
-       baselineAdjustment:UIBaselineAdjustmentAlignBaselines
-         characterSpacing:characterSpacing];
+       baselineAdjustment:UIBaselineAdjustmentAlignBaselines];
         
         total.width = MAX(total.width, offset.x + size.width);
         offset.y += font.lineHeight + lineSpacing;
@@ -429,13 +348,51 @@
     }
 }
 
-- (void)setCharacterSpacing:(CGFloat)characterSpacing
-{
-    if (_characterSpacing != characterSpacing)
+- (CGSize)FXLabel_sizeThatFits:(CGSize)size actualFontSize:(CGFloat *)actualFontSize
+{    
+    if (self.numberOfLines == 1)
     {
-        _characterSpacing = characterSpacing;
-        [self setNeedsDisplay];
+        
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
+        
+        CGFloat minimumFontSize = self.minimumFontSize ?: self.font.pointSize;
+        
+#else
+        
+        CGFloat minimumFontSize = self.minimumScaleFactor? self.minimumScaleFactor * fontSize: self.font.pointSize;
+        
+#endif
+        size = [self.text sizeWithFont:self.font
+                           minFontSize:minimumFontSize
+                        actualFontSize:actualFontSize
+                              forWidth:size.width
+                         lineBreakMode:self.lineBreakMode];
     }
+    else
+    {
+        *actualFontSize = self.font.pointSize;
+        size = [self.text sizeWithFont:self.font
+                              constrainedToSize:size
+                                  lineBreakMode:self.lineBreakMode
+                                    lineSpacing:_lineSpacing
+                                   allowOrphans:_allowOrphans];
+        
+        if (self.numberOfLines > 0)
+        {
+            size.height = MIN(size.height, self.numberOfLines * self.font.lineHeight + (self.numberOfLines - 1) * _lineSpacing);
+        }
+    }
+    return size;
+}
+
+- (CGSize)sizeThatFits:(CGSize)size
+{
+    size.width -= (_textInsets.left + _textInsets.right);
+    size.height -= (_textInsets.top + _textInsets.bottom);
+    size = [self FXLabel_sizeThatFits:size actualFontSize:NULL];
+    size.width += (_textInsets.left + _textInsets.right);
+    size.height += (_textInsets.top + _textInsets.bottom);
+    return size;
 }
 
 - (void)FXLabel_getComponents:(CGFloat *)rgba forColor:(CGColorRef)color
@@ -490,11 +447,22 @@
 {
     if (self.numberOfLines == 1)
     {
-        [self.text drawAtPoint:rect.origin forWidth:rect.size.width withFont:self.font minFontSize:font.pointSize actualFontSize:NULL lineBreakMode:self.lineBreakMode baselineAdjustment:self.baselineAdjustment characterSpacing:_characterSpacing];
+        [self.text drawAtPoint:rect.origin
+                      forWidth:rect.size.width
+                      withFont:self.font
+                   minFontSize:font.pointSize
+                actualFontSize:NULL
+                 lineBreakMode:self.lineBreakMode
+            baselineAdjustment:self.baselineAdjustment];
     }
     else
     {
-        [self.text drawInRect:rect withFont:font lineBreakMode:self.lineBreakMode alignment:self.textAlignment lineSpacing:_lineSpacing characterSpacing:_characterSpacing allowOrphans:_allowOrphans];
+        [self.text drawInRect:rect
+                     withFont:font
+                lineBreakMode:self.lineBreakMode
+                    alignment:self.textAlignment
+                  lineSpacing:_lineSpacing
+                 allowOrphans:_allowOrphans];
     }
 }
 
@@ -515,39 +483,11 @@
     contentRect.size.width -= (_textInsets.left + _textInsets.right);
     contentRect.size.height -= (_textInsets.top + _textInsets.bottom);
     
-    //get label size
+    //get dimensions
+    CGFloat fontSize = 0.0f;
     CGRect textRect = contentRect;
-    CGFloat fontSize = self.font.pointSize;
-    
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
-    
-    CGFloat minimumFontSize = self.minimumFontSize ?: fontSize;
-
-#else
-
-    CGFloat minimumFontSize = self.minimumScaleFactor? self.minimumScaleFactor * fontSize: fontSize;
-
-#endif
-    
-    if (self.numberOfLines == 1)
-    {
-        textRect.size = [self.text sizeWithFont:self.font
-                                    minFontSize:minimumFontSize
-                                 actualFontSize:&fontSize
-                                       forWidth:contentRect.size.width
-                                  lineBreakMode:NSLineBreakByTruncatingTail
-                               characterSpacing:_characterSpacing];
-    }
-    else
-    {
-        textRect.size = [self.text sizeWithFont:self.font
-                              constrainedToSize:contentRect.size
-                                  lineBreakMode:self.lineBreakMode
-                                    lineSpacing:_lineSpacing
-                               characterSpacing:_characterSpacing
-                                   allowOrphans:_allowOrphans];
-    }
-    
+    textRect.size = [self FXLabel_sizeThatFits:contentRect.size actualFontSize:&fontSize];
+        
     //set font
     UIFont *font = [self.font fontWithSize:fontSize];
 
