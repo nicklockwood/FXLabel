@@ -1,7 +1,7 @@
 //
 //  FXLabel.h
 //
-//  Version 1.4.2
+//  Version 1.5 beta
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -55,6 +55,7 @@
 @interface FXLabel : UILabel
 
 @property (nonatomic) CGFloat shadowBlur;
+@property (nonatomic) CGFloat innerShadowBlur;
 @property (nonatomic) CGSize innerShadowOffset;
 @property (nonatomic, strong) UIColor *innerShadowColor;
 @property (nonatomic, strong) UIColor *gradientStartColor;

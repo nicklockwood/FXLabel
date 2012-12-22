@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.4.2
+//  Version 1.5 beta
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -252,6 +252,24 @@
         [self setUp];
     }
     return self;
+}
+
+- (void)setShadowBlur:(CGFloat)blur
+{
+    if (shadowBlur != blur)
+    {
+        shadowBlur = blur;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void)setInnerShadowBlur:(CGFloat)blur
+{
+    if (_innerShadowBlur != blur)
+    {
+        _innerShadowBlur = blur;
+        [self setNeedsDisplay];
+    }
 }
 
 - (void)setInnerShadowOffset:(CGSize)offset
@@ -557,10 +575,9 @@
     
     BOOL hasInnerShadow = _innerShadowColor &&
     ![_innerShadowColor isEqual:[UIColor clearColor]] &&
-    !CGSizeEqualToSize(_innerShadowOffset, CGSizeZero);
+    (_innerShadowBlur > 0.0f || !CGSizeEqualToSize(_innerShadowOffset, CGSizeZero));
     
     BOOL hasGradient = [_gradientColors count] > 1;
-    
     BOOL needsMask = hasInnerShadow || hasGradient;
     
     CGImageRef alphaMask = NULL;
@@ -602,18 +619,7 @@
         CGContextTranslateCTM(context, 0, contentRect.size.height);
         CGContextScaleCTM(context, 1.0, -1.0);
         CGContextClipToMask(context, contentRect, alphaMask);
-        
-        if (hasInnerShadow)
-        {
-            //fill inner shadow
-            [_innerShadowColor setFill];
-            CGContextFillRect(context, textRect);
-            
-            //clip to unshadowed part
-            CGContextTranslateCTM(context, _innerShadowOffset.width, -_innerShadowOffset.height);
-            CGContextClipToMask(context, contentRect, alphaMask);
-        }
-        
+
         if (hasGradient)
         {
             //create array of pre-blended CGColors
@@ -625,6 +631,7 @@
             }
             
             //draw gradient
+            CGContextSaveGState(context);
             CGContextScaleCTM(context, 1.0, -1.0);
             CGContextTranslateCTM(context, 0, -contentRect.size.height);       
             CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)colors, NULL);
@@ -635,12 +642,31 @@
             CGContextDrawLinearGradient(context, gradient, startPoint, endPoint,
                                         kCGGradientDrawsAfterEndLocation | kCGGradientDrawsBeforeStartLocation);
             CGGradientRelease(gradient);
+            CGContextRestoreGState(context);
         }
         else
         {
             //fill text
             [textColor setFill];
-            CGContextFillRect(context, textRect);
+            UIRectFill(textRect);
+        }
+        
+        if (hasInnerShadow)
+        {
+            //generate inverse mask
+            UIGraphicsBeginImageContextWithOptions(rect.size, NO, _oversampling);
+            CGContextRef shadowContext = UIGraphicsGetCurrentContext();
+            [[_innerShadowColor colorWithAlphaComponent:1.0f] setFill];
+            UIRectFill(rect);
+            CGContextClipToMask(shadowContext, rect, alphaMask);
+            CGContextClearRect(shadowContext, rect);
+            UIImage *shadowImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+            //draw shadow
+            CGContextSetShadowWithColor(context, _innerShadowOffset, _innerShadowBlur, _innerShadowColor.CGColor);
+            CGContextSetBlendMode(context, kCGBlendModeDarken);
+            [shadowImage drawInRect:rect];
         }
         
         //end clipping

@@ -61,14 +61,18 @@ FXLabel properties
 	@property (nonatomic) CGFloat shadowBlur;
 	
 The softness of the text shadow. Defaults to zero, which creates a hard shadow, identical to the standard UILabel shadow. Note that the shadow's other properties such as shadowOffset and shadowColor are inherited from UILabel and can be found in the standard Apple docs.
+
+    @property (nonatomic) CGFloat innerShadowBlur;
+	
+The softness of the text inner shadow. Defaults to zero, which creates a hard shadow.
 	
 	@property (nonatomic) CGSize innerShadowOffset;
 	
-The offset for the inner shadow. Works the same way as shadowOffset. Currently only hard-edged inner shadows are supported.
+The offset for the inner shadow. Works the same way as shadowOffset.
 	
 	@property (nonatomic, strong) UIColor *innerShadowColor;
 	
-The colour of the inner shadow.
+The colour of the inner shadow. Defaults to transparent.
 
 	@property (nonatomic, copy) NSArray *gradientColors;
 	
@@ -92,7 +96,7 @@ The ending position of the gradient. The x and y coordinates are in the range 0 
 
 	@property (nonatomic) NSUInteger oversampling;
 	
-You may find that for some combinations of effects, the quality of the text edges is poor, particularly on non-Retina devices. In these cases, you can make use of the oversampling property, which will cause the text to be drawn at higher resolution and then downscaled to improve the quality of the drawing, at a slight cost to performance. The default (and minimum) value of the oversampling property matches the [UIScreen mainScreen].scale value. For best results, set oversampling to a power of two, i.e. 1, 2, 4, 8, 16, etc. For performance reasons, you should use the lowest value that yields acceptable results. Note that this property relies on iOS 4 features and has no effect on iOS 3.x.
+You may find that for some combinations of effects, the quality of the text edges is poor, particularly on non-Retina devices, and when using innerShadow. In these cases, you can make use of the oversampling property, which will cause the text to be drawn at higher resolution and then downscaled to improve the quality of the drawing, at a slight cost to performance. The default (and minimum) value of the oversampling property matches the [UIScreen mainScreen].scale value. For best results, set oversampling to a power of two, i.e. 1, 2, 4, 8, 16, etc. For performance reasons, you should use the lowest value that yields acceptable results.
 
 	@property (nonatomic) UIEdgeInsets textInsets;
 

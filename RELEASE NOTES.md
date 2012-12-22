@@ -1,3 +1,7 @@
+Version 1.5 beta
+
+- Added innerShadowBlur property
+
 Version 1.4.2
 
 - Fixed crash when calling sizeToFit or sizeThatFits: methods
