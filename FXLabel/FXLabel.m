@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.4.1
+//  Version 1.4.2
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -78,13 +78,13 @@
     for (int j = 0; index < [words count]; j++)
     {
         NSInteger lineCount = [lines count];
-        if (((lineCount + 1) * font.lineHeight + lineCount * lineSpacing) > size.height)
+        if (lineCount && ((lineCount + 1) * font.lineHeight + lineCount * lineSpacing) > size.height)
         {
             //append next word to last line
             NSString *word = words[j];
             NSString *line = [lines lastObject];
             NSString *newLine = line? [line stringByAppendingFormat:@" %@", word]: word;
-            if (newLine) [lines replaceObjectAtIndex:[lines count] - 1 withObject:newLine];
+            if (newLine) [lines replaceObjectAtIndex:lineCount - 1 withObject:newLine];
             break;
         }
         NSString *line = nil;
@@ -184,7 +184,14 @@
                                 forWidth:CGRectGetWidth(rect)
                            lineBreakMode:lineBreakMode];
         
-        offset.x = roundf(rect.origin.x + (CGRectGetWidth(rect) - size.width)/ 2.0f);
+        if (alignment == NSTextAlignmentCenter)
+        {
+            offset.x = roundf(rect.origin.x + (CGRectGetWidth(rect) - size.width)/ 2.0f);
+        }
+        else if (alignment == NSTextAlignmentRight)
+        {
+            offset.x = roundf(rect.origin.x + (CGRectGetWidth(rect) - size.width));
+        }
         [line drawAtPoint:offset
                  forWidth:CGRectGetWidth(rect)
                  withFont:font
@@ -370,7 +377,10 @@
     }
     else
     {
-        *actualFontSize = self.font.pointSize;
+        if (actualFontSize)
+        {
+            *actualFontSize = self.font.pointSize;
+        }
         size = [self.text sizeWithFont:self.font
                               constrainedToSize:size
                                   lineBreakMode:self.lineBreakMode
@@ -487,9 +497,12 @@
     CGFloat fontSize = 0.0f;
     CGRect textRect = contentRect;
     textRect.size = [self FXLabel_sizeThatFits:contentRect.size actualFontSize:&fontSize];
-        
+    
     //set font
     UIFont *font = [self.font fontWithSize:fontSize];
+    
+    //adjust for minimum height
+    textRect.size.height = MAX(textRect.size.height, font.lineHeight);
 
     //set color
     UIColor *highlightedColor = self.highlightedTextColor ?: self.textColor;

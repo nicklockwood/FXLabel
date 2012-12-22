@@ -1,3 +1,9 @@
+Version 1.4.2
+
+- Fixed crash when calling sizeToFit or sizeThatFits: methods
+- Fixed crash when label height is less than the height of a single line
+- Fixed bug with text alignment for multiline labels
+
 Version 1.4.1
 
 - Fixed a bug when deployment target < 6.0
