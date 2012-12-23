@@ -38,21 +38,43 @@ NSString extensions
 FXLabel extends NSString with the following methods:
 
     - (CGSize)sizeWithFont:(UIFont *)font
+               minFontSize:(CGFloat)minFontSize
+            actualFontSize:(CGFloat *)actualFontSize
+                  forWidth:(CGFloat)width
+             lineBreakMode:(NSLineBreakMode)lineBreakMode
+          characterSpacing:(CGFloat)characterSpacing;
+
+This method calculates the size of a rendered string when using the FXLabel characterSpacing property. This method is suitable for calculating the size of strings rendered on a single line and doesn't work for multi-line strings.
+
+    - (CGSize)drawAtPoint:(CGPoint)point
+                 forWidth:(CGFloat)width
+                 withFont:(UIFont *)font
+              minFontSize:(CGFloat)minFontSize
+           actualFontSize:(CGFloat *)actualFontSize
+            lineBreakMode:(NSLineBreakMode)lineBreakMode
+       baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
+         characterSpacing:(CGFloat)characterSpacing;
+         
+This method renders the a string when using the FXLabel characterSpacing property. This method is suitable for rendering single-line strings and doesn't work for multiline strings.
+
+    - (CGSize)sizeWithFont:(UIFont *)font
          constrainedToSize:(CGSize)size
              lineBreakMode:(NSLineBreakMode)lineBreakMode
                lineSpacing:(CGFloat)lineSpacing
+          characterSpacing:(CGFloat)characterSpacing
               allowOrphans:(BOOL)allowOrphans;
               
-This method calculates the size of a rendered string when using FXLabel lineSpacing and allowOrphans properties. 
+This method calculates the size of a rendered string when using the FXLabel lineSpacing, characterSpacing and allowOrphans properties. It is suitable for use with mult-line strings.
     
     - (CGSize)drawInRect:(CGRect)rect
                 withFont:(UIFont *)font
            lineBreakMode:(NSLineBreakMode)lineBreakMode
                alignment:(NSTextAlignment)alignment
              lineSpacing:(CGFloat)lineSpacing
+        characterSpacing:(CGFloat)characterSpacing
             allowOrphans:(BOOL)allowOrphans;
 
-This method renders a string using the FXLabel lineSpacing and allowOrphans properties.
+This method renders a string using the FXLabel lineSpacing, characterSpacing and allowOrphans properties. It is suitable for use with mult-line strings.
 
 
 FXLabel properties
@@ -105,6 +127,10 @@ FXLabel effects cannot be drawn outside of the bounds of the label view. For lab
     @property (nonatomic) CGFloat lineSpacing;
     
 The lineSpacing property allows you to control the amount of space between lines in the label. The value is specified in points and defaults to zero.
+
+    @property (nonatomic) CGFloat characterSpacing;
+    
+The characterSpacing property allows you to control the amount of space between letters in the label. The value is specified in points and defaults to zero.
     
     @property (nonatomic) BOOL allowOrphans;
     

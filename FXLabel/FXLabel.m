@@ -56,6 +56,7 @@
                  constrainedToSize:(CGSize)size
                      lineBreakMode:(NSLineBreakMode)lineBreakMode
                        lineSpacing:(CGFloat)lineSpacing
+                  characterSpacing:(CGFloat)characterSpacing
                       allowOrphans:(BOOL)allowOrphans
 {
     //TODO: handle lineBreakMode of type NSLineBreakByCharWrapping
@@ -93,8 +94,11 @@
             NSString *word = words[i];
             NSString *newLine = line? [line stringByAppendingFormat:@" %@", word]: word;
             CGFloat lineWidth = [newLine sizeWithFont:font
+                                          minFontSize:font.pointSize
+                                       actualFontSize:NULL
                                              forWidth:INFINITY
-                                        lineBreakMode:lineBreakMode].width;
+                                        lineBreakMode:lineBreakMode
+                                     characterSpacing:characterSpacing].width;
             
             if ([word isEqualToString:@"\n"])
             {
@@ -141,24 +145,191 @@
     return lines;
 }
 
+- (CGSize)FXLabel_sizeWithFont:(UIFont *)font
+                   minFontSize:(CGFloat)minFontSize
+                actualFontSize:(CGFloat *)actualFontSize
+                      forWidth:(CGFloat)width
+                 lineBreakMode:(NSLineBreakMode)lineBreakMode
+              characterSpacing:(CGFloat)characterSpacing
+              charactersFitted:(NSInteger *)charactersFitted
+              includesEllipsis:(BOOL *)includesEllipsis
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    CGContextSetTextDrawingMode(context, kCGTextInvisible);
+    
+    if (includesEllipsis) *includesEllipsis = NO;
+    minFontSize = minFontSize ?: font.pointSize;
+    UIFont *subFont = font;
+    while (true)
+    {
+        int i = 0;
+        CGFloat x = 0.0f;
+        for (i = 0; i < [self length]; i++)
+        {
+            x += [[self substringWithRange:NSMakeRange(i, 1)] drawAtPoint:CGPointZero withFont:subFont].width + characterSpacing;
+            if (x - characterSpacing > width) break;
+        }
+        if (x > 0.0f) x -= characterSpacing;
+        if (x <= width && i == [self length])
+        {
+            //the text fits, return size
+            CGContextRestoreGState(context);
+            if (actualFontSize) *actualFontSize = subFont.pointSize;
+            if (charactersFitted) *charactersFitted = [self length];
+            return CGSizeMake(x, font.lineHeight);
+        }
+        else if (subFont.pointSize == minFontSize)
+        {
+            //text is truncated
+            if (lineBreakMode == NSLineBreakByClipping)
+            {
+                //subtract width of last character
+                x += [[self substringWithRange:NSMakeRange(i, 1)] drawAtPoint:CGPointZero withFont:subFont].width + characterSpacing;
+                
+                CGContextRestoreGState(context);
+                if (actualFontSize) *actualFontSize = subFont.pointSize;
+                if (charactersFitted) *charactersFitted = i + 1;
+                return CGSizeMake(x, font.lineHeight);
+            }
+            else
+            {
+                //allow space for ellipsis
+                CGFloat ellipsisWidth = [@"…" sizeWithFont:subFont].width;
+                if (ellipsisWidth > width)
+                {
+                    CGContextRestoreGState(context);
+                    if (actualFontSize) *actualFontSize = subFont.pointSize;
+                    if (charactersFitted) *charactersFitted = 0;
+                    return CGSizeMake(0.0f, font.lineHeight);
+                }
+                else
+                {
+                    CGFloat subX = 0.0f;
+                    for (; i >= 0; i--)
+                    {
+                        subX += [[self substringWithRange:NSMakeRange(i, 1)] drawAtPoint:CGPointZero withFont:subFont].width + characterSpacing;
+                        if (subX >= ellipsisWidth + characterSpacing) break;
+                    }
+                    CGContextRestoreGState(context);
+                    if (i > 0) subX -= characterSpacing;
+                    if (actualFontSize) *actualFontSize = subFont.pointSize;
+                    if (charactersFitted) *charactersFitted = i;
+                    if (includesEllipsis) *includesEllipsis = YES;
+                    return CGSizeMake(x - subX + ellipsisWidth, font.lineHeight);
+                }
+            }
+        }
+        else
+        {
+            //try again with the next point size
+            CGFloat pointSize = MAX(minFontSize, subFont.pointSize - 1.0f);
+            subFont = [font fontWithSize:pointSize];
+        }
+    }
+}
+
+- (CGSize)sizeWithFont:(UIFont *)font
+           minFontSize:(CGFloat)minFontSize
+        actualFontSize:(CGFloat *)actualFontSize
+              forWidth:(CGFloat)width
+         lineBreakMode:(NSLineBreakMode)lineBreakMode
+      characterSpacing:(CGFloat)characterSpacing
+{
+    return [self FXLabel_sizeWithFont:font
+                          minFontSize:minFontSize
+                       actualFontSize:actualFontSize
+                             forWidth:width
+                        lineBreakMode:lineBreakMode
+                     characterSpacing:characterSpacing
+                     charactersFitted:NULL
+                     includesEllipsis:NULL];
+}
+
+- (CGSize)drawAtPoint:(CGPoint)point
+             forWidth:(CGFloat)width
+             withFont:(UIFont *)font
+          minFontSize:(CGFloat)minFontSize
+       actualFontSize:(CGFloat *)actualFontSize
+        lineBreakMode:(NSLineBreakMode)lineBreakMode
+   baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
+     characterSpacing:(CGFloat)characterSpacing
+{
+    NSInteger charactersFitted = 0;
+    BOOL includesEllipsis = NO;
+    CGFloat fontSize = font.pointSize;
+    CGSize size = [self FXLabel_sizeWithFont:font
+                                 minFontSize:minFontSize
+                              actualFontSize:&fontSize
+                                    forWidth:width
+                               lineBreakMode:lineBreakMode
+                            characterSpacing:characterSpacing
+                            charactersFitted:&charactersFitted
+                            includesEllipsis:&includesEllipsis];
+
+    CGFloat y = point.y;
+    UIFont *subFont = [font fontWithSize:fontSize];
+    if (fontSize < font.pointSize)
+    {
+        switch (baselineAdjustment)
+        {
+            case UIBaselineAdjustmentAlignCenters:
+            {
+                y += (font.lineHeight - subFont.lineHeight) / 2.0f;
+                break;
+            }
+            case UIBaselineAdjustmentAlignBaselines:
+            {
+                y += (font.ascender - subFont.ascender);
+                break;
+            }
+            case UIBaselineAdjustmentNone:
+            default:
+            {
+                //no adjustment needed
+                break;
+            }
+        }
+    }
+    
+    CGFloat x = point.x;
+    for (int i = 0; i < charactersFitted; i++)
+    {
+        x += [[self substringWithRange:NSMakeRange(i, 1)] drawAtPoint:CGPointMake(x, y)
+                                                             withFont:subFont].width + characterSpacing;
+    }
+    if (includesEllipsis)
+    {
+        [@"…"  drawAtPoint:CGPointMake(x, point.y) withFont:subFont];
+    }
+    
+    if (actualFontSize) *actualFontSize = fontSize;
+    return size;
+}
+
 - (CGSize)sizeWithFont:(UIFont *)font
      constrainedToSize:(CGSize)size
          lineBreakMode:(NSLineBreakMode)lineBreakMode
            lineSpacing:(CGFloat)lineSpacing
+      characterSpacing:(CGFloat)characterSpacing
           allowOrphans:(BOOL)allowOrphans
 {
     NSArray *lines = [self FXLabel_linesWithFont:font
                                constrainedToSize:size
                                    lineBreakMode:lineBreakMode
                                      lineSpacing:lineSpacing
+                                characterSpacing:characterSpacing
                                     allowOrphans:allowOrphans];
     CGSize total = CGSizeZero;
     total.height = MIN(size.height, [lines count] * font.lineHeight + ([lines count] - 1) * lineSpacing);
     for (NSString *line in lines)
     {
         total.width = MAX(total.width, [line sizeWithFont:font
+                                              minFontSize:font.pointSize
+                                           actualFontSize:NULL
                                                  forWidth:size.width
-                                            lineBreakMode:lineBreakMode].width);
+                                            lineBreakMode:lineBreakMode
+                                         characterSpacing:characterSpacing].width);
     }
     return total;
 }
@@ -168,12 +339,14 @@
        lineBreakMode:(NSLineBreakMode)lineBreakMode
            alignment:(NSTextAlignment)alignment
          lineSpacing:(CGFloat)lineSpacing
+    characterSpacing:(CGFloat)characterSpacing
         allowOrphans:(BOOL)allowOrphans
 {
     NSArray *lines = [self FXLabel_linesWithFont:font
                                constrainedToSize:rect.size
                                    lineBreakMode:lineBreakMode
                                      lineSpacing:lineSpacing
+                                characterSpacing:characterSpacing
                                     allowOrphans:allowOrphans];
     CGSize total = CGSizeZero;
     total.height = [lines count] * font.lineHeight + ([lines count] - 1) * lineSpacing;
@@ -181,8 +354,11 @@
     for (NSString *line in lines)
     {
         CGSize size = [line sizeWithFont:font
+                             minFontSize:font.pointSize
+                          actualFontSize:NULL
                                 forWidth:CGRectGetWidth(rect)
-                           lineBreakMode:lineBreakMode];
+                           lineBreakMode:lineBreakMode
+                        characterSpacing:characterSpacing];
         
         if (alignment == NSTextAlignmentCenter)
         {
@@ -198,7 +374,8 @@
               minFontSize:font.pointSize
            actualFontSize:NULL
             lineBreakMode:lineBreakMode
-       baselineAdjustment:UIBaselineAdjustmentAlignBaselines];
+       baselineAdjustment:UIBaselineAdjustmentAlignBaselines
+         characterSpacing:characterSpacing];
         
         total.width = MAX(total.width, offset.x + size.width);
         offset.y += font.lineHeight + lineSpacing;
@@ -391,7 +568,8 @@
                            minFontSize:minimumFontSize
                         actualFontSize:actualFontSize
                               forWidth:size.width
-                         lineBreakMode:self.lineBreakMode];
+                         lineBreakMode:self.lineBreakMode
+                      characterSpacing:_characterSpacing];
     }
     else
     {
@@ -400,10 +578,11 @@
             *actualFontSize = self.font.pointSize;
         }
         size = [self.text sizeWithFont:self.font
-                              constrainedToSize:size
-                                  lineBreakMode:self.lineBreakMode
-                                    lineSpacing:_lineSpacing
-                                   allowOrphans:_allowOrphans];
+                     constrainedToSize:size
+                         lineBreakMode:self.lineBreakMode
+                           lineSpacing:_lineSpacing
+                      characterSpacing:_characterSpacing
+                          allowOrphans:_allowOrphans];
         
         if (self.numberOfLines > 0)
         {
@@ -481,7 +660,8 @@
                    minFontSize:font.pointSize
                 actualFontSize:NULL
                  lineBreakMode:self.lineBreakMode
-            baselineAdjustment:self.baselineAdjustment];
+            baselineAdjustment:self.baselineAdjustment
+              characterSpacing:_characterSpacing];
     }
     else
     {
@@ -490,6 +670,7 @@
                 lineBreakMode:self.lineBreakMode
                     alignment:self.textAlignment
                   lineSpacing:_lineSpacing
+             characterSpacing:_characterSpacing
                  allowOrphans:_allowOrphans];
     }
 }
@@ -532,7 +713,7 @@
     {
         case NSTextAlignmentCenter:
         {
-            textRect.origin.x = contentRect.origin.x + (contentRect.size.width - textRect.size.width) / 2.0f;
+            textRect.origin.x = contentRect.origin.x + roundf((contentRect.size.width - textRect.size.width) / 2.0f);
             break;
         }
         case NSTextAlignmentRight:
@@ -588,7 +769,7 @@
         [self FXLabel_drawTextInRect:textRect withFont:font];
         CGContextRestoreGState(context);
         
-        // Create an image mask from what we've drawn so far
+        //create an image mask from what we've drawn so far
         alphaMask = CGBitmapContextCreateImage(context);
         
         //clear the context
