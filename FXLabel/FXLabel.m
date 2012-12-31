@@ -42,6 +42,19 @@
 
 @implementation NSString (FXLabelDrawing)
 
+- (CGContextRef)FXLabel_sizingContext
+{
+    static CGContextRef context = NULL;
+    if (!context)
+    {
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+        context = CGBitmapContextCreate(NULL, 1, 1, 8, 0, colorSpace, 0);
+        CGContextSetTextDrawingMode(context, kCGTextInvisible);
+        CGColorSpaceRelease(colorSpace);
+    }
+    return context;
+}
+
 - (BOOL)FXLabel_isPunctuation
 {
     return [[NSSet setWithObjects:
@@ -154,9 +167,7 @@
               charactersFitted:(NSInteger *)charactersFitted
               includesEllipsis:(BOOL *)includesEllipsis
 {
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(context);
-    CGContextSetTextDrawingMode(context, kCGTextInvisible);
+    UIGraphicsPushContext([self FXLabel_sizingContext]);
     
     if (includesEllipsis) *includesEllipsis = NO;
     minFontSize = minFontSize ?: font.pointSize;
@@ -174,7 +185,7 @@
         if (x <= width && i == [self length])
         {
             //the text fits, return size
-            CGContextRestoreGState(context);
+            UIGraphicsPopContext();
             if (actualFontSize) *actualFontSize = subFont.pointSize;
             if (charactersFitted) *charactersFitted = [self length];
             return CGSizeMake(x, font.lineHeight);
@@ -187,7 +198,7 @@
                 //subtract width of last character
                 x += [[self substringWithRange:NSMakeRange(i, 1)] drawAtPoint:CGPointZero withFont:subFont].width + characterSpacing;
                 
-                CGContextRestoreGState(context);
+                UIGraphicsPopContext();
                 if (actualFontSize) *actualFontSize = subFont.pointSize;
                 if (charactersFitted) *charactersFitted = i + 1;
                 return CGSizeMake(x, font.lineHeight);
@@ -198,7 +209,7 @@
                 CGFloat ellipsisWidth = [@"…" sizeWithFont:subFont].width;
                 if (ellipsisWidth > width)
                 {
-                    CGContextRestoreGState(context);
+                    UIGraphicsPopContext();
                     if (actualFontSize) *actualFontSize = subFont.pointSize;
                     if (charactersFitted) *charactersFitted = 0;
                     return CGSizeMake(0.0f, font.lineHeight);
@@ -211,7 +222,7 @@
                         subX += [[self substringWithRange:NSMakeRange(i, 1)] drawAtPoint:CGPointZero withFont:subFont].width + characterSpacing;
                         if (subX >= ellipsisWidth + characterSpacing) break;
                     }
-                    CGContextRestoreGState(context);
+                    UIGraphicsPopContext();
                     if (i > 0) subX -= characterSpacing;
                     if (actualFontSize) *actualFontSize = subFont.pointSize;
                     if (charactersFitted) *charactersFitted = i;
