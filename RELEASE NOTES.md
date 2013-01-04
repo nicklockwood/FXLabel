@@ -1,7 +1,9 @@
 Version 1.5 beta
 
 - Added innerShadowBlur property
-- Added chracterSpacing property
+- Added characterSpacing property
+- Added kerningTable property for per-character spacing
+- LineSpacing property is now relative to pointSize
 
 Version 1.4.2
 

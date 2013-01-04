@@ -42,9 +42,10 @@ FXLabel extends NSString with the following methods:
             actualFontSize:(CGFloat *)actualFontSize
                   forWidth:(CGFloat)width
              lineBreakMode:(NSLineBreakMode)lineBreakMode
-          characterSpacing:(CGFloat)characterSpacing;
+          characterSpacing:(CGFloat)characterSpacing
+              kerningTable:(NSDictionary *)kerningTable;
 
-This method calculates the size of a rendered string when using the FXLabel characterSpacing property. This method is suitable for calculating the size of strings rendered on a single line and doesn't work for multi-line strings.
+This method calculates the size of a rendered string when using the FXLabel characterSpacing and kerningTable properties. This method is suitable for calculating the size of strings rendered on a single line and doesn't work for multi-line strings. Pass nil for the kerningTable if you do not require that feature.
 
     - (CGSize)drawAtPoint:(CGPoint)point
                  forWidth:(CGFloat)width
@@ -53,18 +54,20 @@ This method calculates the size of a rendered string when using the FXLabel char
            actualFontSize:(CGFloat *)actualFontSize
             lineBreakMode:(NSLineBreakMode)lineBreakMode
        baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
-         characterSpacing:(CGFloat)characterSpacing;
+         characterSpacing:(CGFloat)characterSpacing
+             kerningTable:(NSDictionary *)kerningTable;
          
-This method renders the a string when using the FXLabel characterSpacing property. This method is suitable for rendering single-line strings and doesn't work for multiline strings.
+This method renders the a string when using the FXLabel characterSpacing and kerningTable properties. This method is suitable for rendering single-line strings and doesn't work for multiline strings. Pass nil for the kerningTable if you do not require that feature.
 
     - (CGSize)sizeWithFont:(UIFont *)font
          constrainedToSize:(CGSize)size
              lineBreakMode:(NSLineBreakMode)lineBreakMode
                lineSpacing:(CGFloat)lineSpacing
           characterSpacing:(CGFloat)characterSpacing
+              kerningTable:(NSDictionary *)kerningTable
               allowOrphans:(BOOL)allowOrphans;
-              
-This method calculates the size of a rendered string when using the FXLabel lineSpacing, characterSpacing and allowOrphans properties. It is suitable for use with mult-line strings.
+
+This method calculates the size of a rendered string when using the FXLabel lineSpacing, characterSpacing, kerningTable and allowOrphans properties. It is suitable for use with mult-line strings. Pass nil for the kerningTable if you do not require that feature.
     
     - (CGSize)drawInRect:(CGRect)rect
                 withFont:(UIFont *)font
@@ -72,9 +75,10 @@ This method calculates the size of a rendered string when using the FXLabel line
                alignment:(NSTextAlignment)alignment
              lineSpacing:(CGFloat)lineSpacing
         characterSpacing:(CGFloat)characterSpacing
+            kerningTable:(NSDictionary *)kerningTable
             allowOrphans:(BOOL)allowOrphans;
-
-This method renders a string using the FXLabel lineSpacing, characterSpacing and allowOrphans properties. It is suitable for use with mult-line strings.
+                  
+This method renders a string using the FXLabel lineSpacing, characterSpacing, kerningTable and allowOrphans properties. It is suitable for use with mult-line strings. Pass nil for the kerningTable if you do not require that feature.
 
 
 FXLabel properties
@@ -126,11 +130,15 @@ FXLabel effects cannot be drawn outside of the bounds of the label view. For lab
 
     @property (nonatomic) CGFloat lineSpacing;
     
-The lineSpacing property allows you to control the amount of space between lines in the label. The value is specified in points and defaults to zero.
+The lineSpacing property allows you to control the amount of space between lines in the label. Defaults to zero. **Note:** as of version 1.5, this value is relative to the pointSize of the font instead of being specified in absolute points.
 
     @property (nonatomic) CGFloat characterSpacing;
     
-The characterSpacing property allows you to control the amount of space between letters in the label. The value is specified in points and defaults to zero.
+The characterSpacing property allows you to control the amount of space between letters in the label. The value defaults to zero and is relative to the pointSize of the font. For this reason, if you are using the minimumFontSize/minimumScaleFactor feature then the characterSpacing will also reduce proportionally when the font size shrinks.
+
+    @property (nonatomic, copy) NSDictionary *kerningTable;
+    
+The kerningTable property is used to individually control the spacing for each character in a font. The dictionary consists of NSNumber values keyed by character string. The values are relative to the pointSize of the font. So for example, if you wanted to increase the spacing for the letter "a" by half the point size, you'd set the kerningTable value to `@{ @"a": @0.5 }`. If you wanted to reduce the space for an exclamation mark by 25% of the point size, you'd use `@{ @"!": @-0.25 }`.
     
     @property (nonatomic) BOOL allowOrphans;
     
@@ -152,6 +160,6 @@ FXLabels have a nice additional layout feature, which is that (unlike UILabels) 
 
 FXLabels are slower to draw than UILabels, so be wary of overusing them, especially for text that needs to be resized or animated.
 
-FXLabel effects cannot be drawn outside of the bounds of the label view. For labels with shadowBlur or shadowOffset values, you will need to increase the size of the label frame to prevent the shadow being cropped. If your text is not centre aligned, you will also need to make use of the textInsets property to inset the text from the edge of the view so the text effects are not cropped.
+FXLabel effects cannot be drawn outside of the bounds of the label view. For labels with shadowBlur or shadowOffset values, you will need to increase the size of the label frame to prevent the shadow being cropped. If your text is not center-aligned, you will also need to make use of the textInsets property to inset the text from the edge of the view so the text effects are not cropped.
 
 The gradientColor properties do not support patterned, indexed or HSV colours.

@@ -321,9 +321,9 @@
 						<reference key="object" ref="150709678"/>
 						<array key="userDefinedRuntimeAttributes">
 							<object class="IBUserDefinedRuntimeAttribute">
-								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.number</string>
+								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
 								<string key="keyPath">characterSpacing</string>
-								<integer value="2" key="value"/>
+								<string key="value">0.1</string>
 							</object>
 						</array>
 					</object>
@@ -337,9 +337,9 @@
 						<reference key="object" ref="533660965"/>
 						<array key="userDefinedRuntimeAttributes">
 							<object class="IBUserDefinedRuntimeAttribute">
-								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.number</string>
+								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
 								<string key="keyPath">characterSpacing</string>
-								<integer value="10" key="value"/>
+								<string key="value">0.5</string>
 							</object>
 						</array>
 					</object>

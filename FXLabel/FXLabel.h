@@ -41,7 +41,8 @@
         actualFontSize:(CGFloat *)actualFontSize
               forWidth:(CGFloat)width
          lineBreakMode:(NSLineBreakMode)lineBreakMode
-      characterSpacing:(CGFloat)characterSpacing;
+      characterSpacing:(CGFloat)characterSpacing
+          kerningTable:(NSDictionary *)kerningTable;
 
 - (CGSize)drawAtPoint:(CGPoint)point
              forWidth:(CGFloat)width
@@ -50,13 +51,15 @@
        actualFontSize:(CGFloat *)actualFontSize
         lineBreakMode:(NSLineBreakMode)lineBreakMode
    baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
-     characterSpacing:(CGFloat)characterSpacing;
+     characterSpacing:(CGFloat)characterSpacing
+         kerningTable:(NSDictionary *)kerningTable;
 
 - (CGSize)sizeWithFont:(UIFont *)font
      constrainedToSize:(CGSize)size
          lineBreakMode:(NSLineBreakMode)lineBreakMode
            lineSpacing:(CGFloat)lineSpacing
       characterSpacing:(CGFloat)characterSpacing
+          kerningTable:(NSDictionary *)kerningTable
           allowOrphans:(BOOL)allowOrphans;
 
 - (CGSize)drawInRect:(CGRect)rect
@@ -65,6 +68,7 @@
            alignment:(NSTextAlignment)alignment
          lineSpacing:(CGFloat)lineSpacing
     characterSpacing:(CGFloat)characterSpacing
+        kerningTable:(NSDictionary *)kerningTable
         allowOrphans:(BOOL)allowOrphans;
 
 @end
@@ -85,6 +89,7 @@
 @property (nonatomic) UIEdgeInsets textInsets;
 @property (nonatomic) CGFloat lineSpacing;
 @property (nonatomic) CGFloat characterSpacing;
+@property (nonatomic, copy) NSDictionary *kerningTable;
 @property (nonatomic) BOOL allowOrphans;
 
 - (void)setUp;

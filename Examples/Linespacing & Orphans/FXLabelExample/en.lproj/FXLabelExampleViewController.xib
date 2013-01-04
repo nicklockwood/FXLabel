@@ -340,9 +340,9 @@
 						<reference key="object" ref="533660965"/>
 						<array key="userDefinedRuntimeAttributes">
 							<object class="IBUserDefinedRuntimeAttribute">
-								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.number</string>
+								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
 								<string key="keyPath">lineSpacing</string>
-								<integer value="10" key="value"/>
+								<string key="value">1</string>
 							</object>
 						</array>
 					</object>
