@@ -144,7 +144,7 @@
 		01FAC0F21400668500B63C5B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 01FAC0F51400668500B63C5B /* Build configuration list for PBXProject "FXLabelExample" */;
 			compatibilityVersion = "Xcode 3.2";
