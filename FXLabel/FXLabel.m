@@ -81,7 +81,7 @@
     text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@" \n "];
     NSArray *words = [text componentsSeparatedByString:@" "];
     words = [words filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"length > 0"]];
-
+    
     //calculate lines
     NSInteger index = 0;
     NSMutableArray *lines = [NSMutableArray array];
@@ -111,7 +111,7 @@
                                              forWidth:INFINITY
                                         lineBreakMode:lineBreakMode
                                      characterSpacing:characterSpacing
-                                     kerningTable:kerningTable].width;
+                                         kerningTable:kerningTable].width;
             
             if ([word isEqualToString:@"\n"])
             {
@@ -167,7 +167,7 @@
                   kerningTable:(NSDictionary *)kerningTable
               charactersFitted:(NSInteger *)charactersFitted
               includesEllipsis:(BOOL *)includesEllipsis
-{    
+{
     UIGraphicsPushContext([self FXLabel_sizingContext]);
     
     if (includesEllipsis) *includesEllipsis = NO;
@@ -203,7 +203,7 @@
                 x += charWidth;
             }
         }
-        if (x <= width)
+        if (floorf(x) <= ceilf(width))
         {
             //the text fits, return size
             UIGraphicsPopContext();
@@ -279,7 +279,7 @@
                                  forWidth:width
                             lineBreakMode:lineBreakMode
                          characterSpacing:characterSpacing
-                         kerningTable:kerningTable
+                             kerningTable:kerningTable
                          charactersFitted:NULL
                          includesEllipsis:NULL];
     }
@@ -318,7 +318,7 @@
                                         forWidth:width
                                    lineBreakMode:lineBreakMode
                                 characterSpacing:characterSpacing
-                                kerningTable:kerningTable
+                                    kerningTable:kerningTable
                                 charactersFitted:&charactersFitted
                                 includesEllipsis:&includesEllipsis];
         
@@ -392,7 +392,7 @@
                                        lineBreakMode:lineBreakMode
                                          lineSpacing:lineSpacing
                                     characterSpacing:characterSpacing
-                                    kerningTable:kerningTable
+                                        kerningTable:kerningTable
                                         allowOrphans:allowOrphans];
         CGSize total = CGSizeZero;
         total.height = MIN(size.height, [lines count] * font.lineHeight + ([lines count] - 1) * roundf(font.pointSize *lineSpacing));
@@ -404,7 +404,7 @@
                                                      forWidth:size.width
                                                 lineBreakMode:lineBreakMode
                                              characterSpacing:characterSpacing
-                                             kerningTable:kerningTable].width);
+                                                 kerningTable:kerningTable].width);
         }
         return total;
     }
@@ -435,7 +435,7 @@
                                        lineBreakMode:lineBreakMode
                                          lineSpacing:lineSpacing
                                     characterSpacing:characterSpacing
-                                    kerningTable:kerningTable
+                                        kerningTable:kerningTable
                                         allowOrphans:allowOrphans];
         CGSize total = CGSizeZero;
         total.height = [lines count] * font.lineHeight + ([lines count] - 1) * roundf(font.pointSize * lineSpacing);
@@ -448,7 +448,7 @@
                                     forWidth:CGRectGetWidth(rect)
                                lineBreakMode:lineBreakMode
                             characterSpacing:characterSpacing
-                            kerningTable:kerningTable];
+                                kerningTable:kerningTable];
             
             if (alignment == NSTextAlignmentCenter)
             {
@@ -794,7 +794,7 @@
                  lineBreakMode:self.lineBreakMode
             baselineAdjustment:self.baselineAdjustment
               characterSpacing:_characterSpacing
-              kerningTable:_kerningTable];
+                  kerningTable:_kerningTable];
     }
     else
     {
@@ -804,7 +804,7 @@
                     alignment:self.textAlignment
                   lineSpacing:_lineSpacing
              characterSpacing:_characterSpacing
-             kerningTable:_kerningTable
+                 kerningTable:_kerningTable
                  allowOrphans:_allowOrphans];
     }
 }
@@ -836,7 +836,7 @@
     
     //adjust for minimum height
     textRect.size.height = MAX(textRect.size.height, font.lineHeight);
-
+    
     //set color
     UIColor *highlightedColor = self.highlightedTextColor ?: self.textColor;
     UIColor *textColor = self.highlighted? highlightedColor: self.textColor;
@@ -934,7 +934,7 @@
         CGContextTranslateCTM(context, 0, contentRect.size.height);
         CGContextScaleCTM(context, 1.0, -1.0);
         CGContextClipToMask(context, contentRect, alphaMask);
-
+        
         if (hasGradient)
         {
             //create array of pre-blended CGColors
@@ -948,7 +948,7 @@
             //draw gradient
             CGContextSaveGState(context);
             CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextTranslateCTM(context, 0, -contentRect.size.height);       
+            CGContextTranslateCTM(context, 0, -contentRect.size.height);
             CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)colors, NULL);
             CGPoint startPoint = CGPointMake(textRect.origin.x + _gradientStartPoint.x * textRect.size.width,
                                              textRect.origin.y + _gradientStartPoint.y * textRect.size.height);
