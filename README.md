@@ -136,6 +136,10 @@ The lineSpacing property allows you to control the amount of space between lines
     
 The characterSpacing property allows you to control the amount of space between letters in the label. The value defaults to zero and is relative to the pointSize of the font. For this reason, if you are using the minimumFontSize/minimumScaleFactor feature then the characterSpacing will also reduce proportionally when the font size shrinks.
 
+    @property (nonatomic) CGFloat baselineOffset;
+
+The baselineOffset property adjusts the vertical offset of the text relative to the label frame. This property is useful for fixing fonts where the baseline is set incorrectly in the font file. It only affects how the text is displayed and makes no difference to the label frame or text metrics, wrapping, etc. The baselineOffset value defaults to zero and is relative to the pointSize of the font.
+
     @property (nonatomic, copy) NSDictionary *kerningTable;
     
 The kerningTable property is used to individually control the spacing for each character in a font. The dictionary consists of NSNumber values keyed by character string. The values are relative to the pointSize of the font. So for example, if you wanted to increase the spacing for the letter "a" by half the point size, you'd set the kerningTable value to `@{ @"a": @0.5 }`. If you wanted to reduce the space for an exclamation mark by 25% of the point size, you'd use `@{ @"!": @-0.25 }`.

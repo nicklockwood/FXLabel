@@ -659,6 +659,15 @@
     }
 }
 
+- (void)setBaselineOffset:(CGFloat)baselineOffset
+{
+    if (_baselineOffset != baselineOffset)
+    {
+        _baselineOffset = baselineOffset;
+        [self setNeedsDisplay];
+    }
+}
+
 - (void)setCharacterKerning:(NSDictionary *)kerningTable
 {
     if (_kerningTable != kerningTable)
@@ -784,6 +793,7 @@
 
 - (void)FXLabel_drawTextInRect:(CGRect)rect withFont:(UIFont *)font
 {
+    rect.origin.y += font.pointSize * _baselineOffset;
     if (self.numberOfLines == 1)
     {
         [self.text drawAtPoint:rect.origin

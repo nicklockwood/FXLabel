@@ -70,7 +70,6 @@
     characterSpacing:(CGFloat)characterSpacing
         kerningTable:(NSDictionary *)kerningTable
         allowOrphans:(BOOL)allowOrphans;
-
 @end
 
 
@@ -89,6 +88,7 @@
 @property (nonatomic) UIEdgeInsets textInsets;
 @property (nonatomic) CGFloat lineSpacing;
 @property (nonatomic) CGFloat characterSpacing;
+@property (nonatomic) CGFloat baselineOffset;
 @property (nonatomic, copy) NSDictionary *kerningTable;
 @property (nonatomic) BOOL allowOrphans;
 
