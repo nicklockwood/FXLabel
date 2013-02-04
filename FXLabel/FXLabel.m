@@ -65,6 +65,19 @@
              nil] containsObject:self];
 }
 
+- (NSArray *)FXLabel_characters
+{
+    NSUInteger length = [self length];
+    NSMutableArray *characters = [NSMutableArray arrayWithCapacity:length];
+    for (NSUInteger i = 0; i < length; i++)
+    {
+        NSRange range = [self rangeOfComposedCharacterSequenceAtIndex:i];
+        [characters addObject:[self substringWithRange:range]];
+        i += range.length - 1;
+    }
+    return characters;
+}
+
 - (NSArray *)FXLabel_linesWithFont:(UIFont *)font
                  constrainedToSize:(CGSize)size
                      lineBreakMode:(NSLineBreakMode)lineBreakMode
@@ -73,85 +86,146 @@
                       kerningTable:(NSDictionary *)kerningTable
                       allowOrphans:(BOOL)allowOrphans
 {
-    //TODO: handle lineBreakMode of type NSLineBreakByCharWrapping
-    //this will require splitting text into individual characters
-    
-    //split text into words
-    NSString *text = [self stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
-    text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@" \n "];
-    NSArray *words = [text componentsSeparatedByString:@" "];
-    words = [words filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"length > 0"]];
-    
-    //calculate lines
     NSInteger index = 0;
     NSMutableArray *lines = [NSMutableArray array];
-    while (index < [words count])
+    if (lineBreakMode == NSLineBreakByCharWrapping)
     {
-        NSInteger lineCount = [lines count];
-        if (lineCount && ((lineCount + 1) * font.lineHeight + lineCount * font.pointSize * lineSpacing) > size.height)
+        //split text into individual characters
+        NSArray *characters = [self FXLabel_characters];
+        
+        //calculate lines
+        while (index < [characters count])
         {
-            //append remaining text to last line
-            NSArray *remainingWords = [words subarrayWithRange:NSMakeRange(index, [words count] - index)];
-            NSString *line = [lines lastObject];
-            NSString *newLine = [line length]? [line stringByAppendingString:@" "]: @"";
-            newLine = [newLine stringByAppendingString:[remainingWords componentsJoinedByString:@" "]];
-            newLine = [newLine stringByReplacingOccurrencesOfString:@"\n " withString:@"\n"];
-            newLine = [newLine stringByReplacingOccurrencesOfString:@" \n" withString:@"\n"];
-            [lines replaceObjectAtIndex:lineCount - 1 withObject:newLine];
-            break;
-        }
-        NSString *line = nil;
-        for (int i = index; i < [words count]; i++)
-        {
-            NSString *word = words[i];
-            NSString *newLine = line? [line stringByAppendingFormat:@" %@", word]: word;
-            CGFloat lineWidth = [newLine sizeWithFont:font
-                                          minFontSize:font.pointSize
-                                       actualFontSize:NULL
-                                             forWidth:INFINITY
-                                        lineBreakMode:lineBreakMode
-                                     characterSpacing:characterSpacing
-                                         kerningTable:kerningTable].width;
-            
-            if ([word isEqualToString:@"\n"])
+            NSInteger lineCount = [lines count];
+            if (lineCount && ((lineCount + 1) * font.lineHeight + lineCount * font.pointSize * lineSpacing) > size.height)
             {
-                //add line and prepare for next
-                [lines addObject:line ?: @""];
-                index = i + 1;
+                //append remaining text to last line
+                NSArray *remainingChars = [characters subarrayWithRange:NSMakeRange(index, [characters count] - index)];
+                NSString *line = [lines lastObject];
+                NSString *newLine = [line length]? line: @"";
+                newLine = [newLine stringByAppendingString:[remainingChars componentsJoinedByString:@""]];
+                [lines replaceObjectAtIndex:lineCount - 1 withObject:newLine];
                 break;
             }
-            else if (lineWidth > size.width && line)
+            NSString *line = nil;
+            for (int i = index; i < [characters count]; i++)
             {
-                //check for orphans
-                if (!allowOrphans && i > 0 &&
-                    (i == [words count] - 1 || [words[i + 1] isEqualToString:@"\n"]) &&
-                    ![words[i - 1] FXLabel_isPunctuation])
-                {
-                    //force line break
-                    NSRange range = [line rangeOfString:@" " options:NSBackwardsSearch];
-                    if (range.location != NSNotFound)
-                    {
-                        line = [line substringToIndex:range.location];
-                        i --;
-                    }
-                }
+                NSString *character = characters[i];
+                NSString *newLine = line? [line stringByAppendingString:character]: character;
+                CGFloat lineWidth = [newLine sizeWithFont:font
+                                              minFontSize:font.pointSize
+                                           actualFontSize:NULL
+                                                 forWidth:INFINITY
+                                            lineBreakMode:lineBreakMode
+                                         characterSpacing:characterSpacing
+                                             kerningTable:kerningTable].width;
                 
-                //add line and prepare for next
-                [lines addObject:line];
-                index = i;
+                if ([character isEqualToString:@"\n"])
+                {
+                    //add line and prepare for next
+                    [lines addObject:line ?: @""];
+                    index = i + 1;
+                    break;
+                }
+                else if (lineWidth > size.width && line)
+                {
+                    //add line and prepare for next
+                    [lines addObject:line];
+                    index = i;
+                    break;
+                }
+                else if (i == [characters count] - 1)
+                {
+                    //add line and finish
+                    [lines addObject:newLine];
+                    index = i + 1;
+                    break;
+                }
+                else
+                {
+                    //continue
+                    line = newLine;
+                }
+            }
+        }
+    }
+    else
+    {
+        //split text into words
+        NSString *text = [self stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
+        text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@" \n "];
+        NSArray *words = [text componentsSeparatedByString:@" "];
+        words = [words filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"length > 0"]];
+        
+        //calculate lines
+        while (index < [words count])
+        {
+            NSInteger lineCount = [lines count];
+            if (lineCount && ((lineCount + 1) * font.lineHeight + lineCount * font.pointSize * lineSpacing) > size.height)
+            {
+                //append remaining text to last line
+                NSArray *remainingWords = [words subarrayWithRange:NSMakeRange(index, [words count] - index)];
+                NSString *line = [lines lastObject];
+                NSString *newLine = [line length]? [line stringByAppendingString:@" "]: @"";
+                newLine = [newLine stringByAppendingString:[remainingWords componentsJoinedByString:@" "]];
+                newLine = [newLine stringByReplacingOccurrencesOfString:@"\n " withString:@"\n"];
+                newLine = [newLine stringByReplacingOccurrencesOfString:@" \n" withString:@"\n"];
+                [lines replaceObjectAtIndex:lineCount - 1 withObject:newLine];
                 break;
             }
-            else if (i == [words count] - 1)
+            NSString *line = nil;
+            for (int i = index; i < [words count]; i++)
             {
-                //add line and finish
-                [lines addObject:newLine];
-                index = i + 1;
-                break;
-            }
-            else
-            {
-                //continue
-                line = newLine;
+                NSString *word = words[i];
+                NSString *newLine = line? [line stringByAppendingFormat:@" %@", word]: word;
+                CGFloat lineWidth = [newLine sizeWithFont:font
+                                              minFontSize:font.pointSize
+                                           actualFontSize:NULL
+                                                 forWidth:INFINITY
+                                            lineBreakMode:lineBreakMode
+                                         characterSpacing:characterSpacing
+                                             kerningTable:kerningTable].width;
+                
+                if ([word isEqualToString:@"\n"])
+                {
+                    //add line and prepare for next
+                    [lines addObject:line ?: @""];
+                    index = i + 1;
+                    break;
+                }
+                else if (lineWidth > size.width && line)
+                {
+                    //check for orphans
+                    if (!allowOrphans && i > 0 &&
+                        (i == [words count] - 1 || [words[i + 1] isEqualToString:@"\n"]) &&
+                        ![words[i - 1] FXLabel_isPunctuation])
+                    {
+                        //force line break
+                        NSRange range = [line rangeOfString:@" " options:NSBackwardsSearch];
+                        if (range.location != NSNotFound)
+                        {
+                            line = [line substringToIndex:range.location];
+                            i --;
+                        }
+                    }
+                    
+                    //add line and prepare for next
+                    [lines addObject:line];
+                    index = i;
+                    break;
+                }
+                else if (i == [words count] - 1)
+                {
+                    //add line and finish
+                    [lines addObject:newLine];
+                    index = i + 1;
+                    break;
+                }
+                else
+                {
+                    //continue
+                    line = newLine;
+                }
             }
         }
     }
@@ -175,22 +249,19 @@
     UIFont *subFont = font;
     while (true)
     {
-        //TODO: current character splitting code doesn't handle multi-unichar characters
         //TODO: doesn't correctly handle head or center truncation
         
         int i = 0;
         CGFloat x = 0.0f;
-        NSMutableArray *characters = [NSMutableArray arrayWithCapacity:[self length]];
-        NSMutableArray *widths = [NSMutableArray arrayWithCapacity:[self length]];
-        for (i = 0; i < [self length]; i++)
+        NSArray *characters = [self FXLabel_characters];
+        NSInteger charCount = [characters count];
+        NSMutableArray *widths = [NSMutableArray arrayWithCapacity:charCount];
+        for (i = 0; i < [characters count]; i++)
         {
-            //get character
-            NSString *character = [self substringWithRange:NSMakeRange(i, 1)];
-            [characters addObject:character];
-            
             //get character width
+            NSString *character = characters[i];
             CGFloat charWidth = [character drawAtPoint:CGPointZero withFont:subFont].width;
-            if (i == [self length] - 1 || x + charWidth > width)
+            if (i == charCount - 1 || x + charWidth > width)
             {
                 [widths addObject:@(charWidth)];
                 x += charWidth;
@@ -208,7 +279,7 @@
             //the text fits, return size
             UIGraphicsPopContext();
             if (actualFontSize) *actualFontSize = subFont.pointSize;
-            if (charactersFitted) *charactersFitted = [self length];
+            if (charactersFitted) *charactersFitted = charCount;
             return CGSizeMake(x, font.lineHeight);
         }
         else if (subFont.pointSize == minFontSize)
@@ -239,7 +310,7 @@
                 else
                 {
                     //remove enough characters to allow space for ellipsis
-                    for (i = [characters count] - 1; i >= 0; i--)
+                    for (i = [widths count] - 1; i >= 0; i--)
                     {
                         x -= [widths[i] floatValue];
                         if (x + ellipsisWidth <= width) break;
@@ -271,17 +342,18 @@
 {
     if (characterSpacing || [kerningTable count])
     {
-        //TODO: round up sizes to nearest point like normal NSString size functions do
+        CGSize size = [self FXLabel_sizeWithFont:font
+                                     minFontSize:minFontSize
+                                  actualFontSize:actualFontSize
+                                        forWidth:width
+                                   lineBreakMode:lineBreakMode
+                                characterSpacing:characterSpacing
+                                    kerningTable:kerningTable
+                                charactersFitted:NULL
+                                includesEllipsis:NULL];
         
-        return [self FXLabel_sizeWithFont:font
-                              minFontSize:minFontSize
-                           actualFontSize:actualFontSize
-                                 forWidth:width
-                            lineBreakMode:lineBreakMode
-                         characterSpacing:characterSpacing
-                             kerningTable:kerningTable
-                         charactersFitted:NULL
-                         includesEllipsis:NULL];
+        //round up size to nearest point like normal NSString size functions do
+        return CGSizeMake(ceilf(size.width), ceilf(size.height));
     }
     else
     {
@@ -385,8 +457,6 @@
 {
     if (lineSpacing || characterSpacing || [kerningTable count] || !allowOrphans)
     {
-        //TODO: round up sizes to nearest point like normal NSString size functions do
-        
         NSArray *lines = [self FXLabel_linesWithFont:font
                                    constrainedToSize:size
                                        lineBreakMode:lineBreakMode
@@ -395,16 +465,16 @@
                                         kerningTable:kerningTable
                                         allowOrphans:allowOrphans];
         CGSize total = CGSizeZero;
-        total.height = MIN(size.height, [lines count] * font.lineHeight + ([lines count] - 1) * roundf(font.pointSize *lineSpacing));
+        total.height = ceilf(MIN(size.height, [lines count] * font.lineHeight + ([lines count] - 1) * roundf(font.pointSize *lineSpacing)));
         for (NSString *line in lines)
         {
-            total.width = MAX(total.width, [line sizeWithFont:font
-                                                  minFontSize:font.pointSize
-                                               actualFontSize:NULL
-                                                     forWidth:size.width
-                                                lineBreakMode:lineBreakMode
-                                             characterSpacing:characterSpacing
-                                                 kerningTable:kerningTable].width);
+            total.width = ceilf(MAX(total.width, [line sizeWithFont:font
+                                                        minFontSize:font.pointSize
+                                                     actualFontSize:NULL
+                                                           forWidth:size.width
+                                                      lineBreakMode:lineBreakMode
+                                                   characterSpacing:characterSpacing
+                                                       kerningTable:kerningTable].width));
         }
         return total;
     }
@@ -496,7 +566,7 @@
 
 @implementation FXLabel
 
-@synthesize shadowBlur; //no _ to avoid conflict with private property
+@synthesize shadowBlur; //no leading _ to avoid conflict with private property
 
 - (void)setUp
 {
