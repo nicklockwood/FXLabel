@@ -749,7 +749,7 @@
 
 - (void)setAllowOrphans:(BOOL)allowOrphans
 {
-    if (_allowOrphans == allowOrphans)
+    if (_allowOrphans != allowOrphans)
     {
         _allowOrphans = allowOrphans;
         [self setNeedsDisplay];
