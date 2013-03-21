@@ -62,19 +62,17 @@
              @"–", //en-dash
              @"—", //em-dash
              @";",
+             @":",
              nil] containsObject:self];
 }
 
 - (NSArray *)FXLabel_characters
 {
-    NSUInteger length = [self length];
-    NSMutableArray *characters = [NSMutableArray arrayWithCapacity:length];
-    for (NSUInteger i = 0; i < length; i++)
-    {
-        NSRange range = [self rangeOfComposedCharacterSequenceAtIndex:i];
-        [characters addObject:[self substringWithRange:range]];
-        i += range.length - 1;
-    }
+    NSMutableArray *characters = [NSMutableArray array];
+    [self enumerateSubstringsInRange:NSMakeRange(0, [self length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+        
+        [characters addObject:substring];
+    }];
     return characters;
 }
 
@@ -92,7 +90,7 @@
     {
         //split text into individual characters
         NSArray *characters = [self FXLabel_characters];
-        
+
         //calculate lines
         while (index < [characters count])
         {
@@ -151,12 +149,18 @@
     }
     else
     {
-        //split text into words
-        NSString *text = [self stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
-        text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@" \n "];
-        NSArray *words = [text componentsSeparatedByString:@" "];
-        words = [words filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"length > 0"]];
+        //TODO: handle hyphenation
         
+        //split text into words
+        NSMutableArray *words = [NSMutableArray array];
+        [self enumerateSubstringsInRange:NSMakeRange(0, [self length]) options:NSStringEnumerationByLines usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+            
+            [words addObjectsFromArray:[substring componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+            
+            [words addObject:@"\n"];
+        }];
+        [words removeLastObject];
+    
         //calculate lines
         while (index < [words count])
         {
