@@ -102,7 +102,7 @@
                 NSString *line = [lines lastObject];
                 NSString *newLine = [line length]? line: @"";
                 newLine = [newLine stringByAppendingString:[remainingChars componentsJoinedByString:@""]];
-                [lines replaceObjectAtIndex:lineCount - 1 withObject:newLine];
+                lines[lineCount - 1] = newLine;
                 break;
             }
             NSString *line = nil;
@@ -174,7 +174,7 @@
                 newLine = [newLine stringByAppendingString:[remainingWords componentsJoinedByString:@" "]];
                 newLine = [newLine stringByReplacingOccurrencesOfString:@"\n " withString:@"\n"];
                 newLine = [newLine stringByReplacingOccurrencesOfString:@" \n" withString:@"\n"];
-                [lines replaceObjectAtIndex:lineCount - 1 withObject:newLine];
+                lines[lineCount - 1] = newLine;
                 break;
             }
             NSString *line = nil;

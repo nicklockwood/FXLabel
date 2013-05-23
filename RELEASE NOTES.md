@@ -1,4 +1,4 @@
-Version 1.5 beta
+Version 1.5
 
 - Added innerShadowBlur property
 - Added characterSpacing property

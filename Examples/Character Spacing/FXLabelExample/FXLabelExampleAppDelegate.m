@@ -12,10 +12,6 @@
 
 @implementation FXLabelExampleAppDelegate
 
-@synthesize window;
-@synthesize viewController;
-
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
