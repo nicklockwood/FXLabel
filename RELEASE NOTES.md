@@ -1,3 +1,7 @@
+Version 1.5.1
+
+- Fixed rounding error that caused layout for multiline labels to not work correctly
+
 Version 1.5
 
 - Added innerShadowBlur property

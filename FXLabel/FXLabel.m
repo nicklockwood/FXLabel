@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.5
+//  Version 1.5.1
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -165,7 +165,7 @@
         while (index < [words count])
         {
             NSInteger lineCount = [lines count];
-            if (lineCount && ((lineCount + 1) * font.lineHeight + lineCount * font.pointSize * lineSpacing) > size.height)
+            if (lineCount && ((lineCount + 1) * font.lineHeight + lineCount * roundf(font.pointSize * lineSpacing)) > size.height)
             {
                 //append remaining text to last line
                 NSArray *remainingWords = [words subarrayWithRange:NSMakeRange(index, [words count] - index)];
