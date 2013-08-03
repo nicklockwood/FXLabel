@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.5 beta
+//  Version 1.5
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
