@@ -272,6 +272,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FXLabelExample/FXLabelExample-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "FXLabelExample/FXLabelExample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
@@ -286,6 +287,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FXLabelExample/FXLabelExample-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "FXLabelExample/FXLabelExample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;

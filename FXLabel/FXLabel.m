@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.5.1
+//  Version 1.5.2
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -770,11 +770,11 @@
         
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
         
-        CGFloat minimumFontSize = self.minimumFontSize ?: self.font.pointSize;
+        CGFloat minimumFontSize = self.adjustsFontSizeToFitWidth? self.minimumFontSize: self.font.pointSize;
         
 #else
         
-        CGFloat minimumFontSize = self.minimumScaleFactor? self.minimumScaleFactor * self.font.pointSize: self.font.pointSize;
+        CGFloat minimumFontSize = self.adjustsFontSizeToFitWidth? self.minimumScaleFactor * self.font.pointSize: self.font.pointSize;
         
 #endif
         size = [self.text sizeWithFont:self.font
