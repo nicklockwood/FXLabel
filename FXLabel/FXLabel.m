@@ -264,7 +264,7 @@
         {
             //get character width
             NSString *character = characters[i];
-            CGFloat charWidth = [character drawAtPoint:CGPointZero withFont:subFont].width;
+			CGFloat charWidth = [character sizeWithAttributes:@{NSFontAttributeName: subFont}].width;
             if (i == charCount - 1 || x + charWidth > width)
             {
                 [widths addObject:@(charWidth)];
@@ -302,7 +302,7 @@
             else
             {
                 //allow space for ellipsis
-                CGFloat ellipsisWidth = [@"…" sizeWithFont:subFont].width;
+                CGFloat ellipsisWidth = [@"…" sizeWithAttributes:@{NSFontAttributeName: subFont}].width;
                 if (ellipsisWidth > width)
                 {
                     //can't fit any text at all
@@ -362,7 +362,7 @@
     else
     {
         //use standard implementation
-        return [self sizeWithFont:font
+		return [self sizeWithFont:font
                       minFontSize:minFontSize
                    actualFontSize:actualFontSize
                          forWidth:width
