@@ -362,11 +362,11 @@
     else
     {
         //use standard implementation
-		return [self sizeWithFont:font
-                      minFontSize:minFontSize
-                   actualFontSize:actualFontSize
-                         forWidth:width
-                    lineBreakMode:lineBreakMode];
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        [style setLineBreakMode:lineBreakMode];
+        
+        return [self sizeWithAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName : style}];
+
     }
 }
 
@@ -427,12 +427,12 @@
         for (int i = 0; i < charactersFitted; i++)
         {
             NSString *character = [self substringWithRange:NSMakeRange(i, 1)];
-            CGFloat charWidth = [character drawAtPoint:CGPointMake(x, y) withFont:subFont].width;
+            CGFloat charWidth = [character sizeWithAttributes:@{NSFontAttributeName: subFont}].width;
             x += charWidth + ([kerningTable[character] floatValue] + characterSpacing) * subFont.pointSize;
         }
         if (includesEllipsis)
         {
-            [@"…" drawAtPoint:CGPointMake(x, point.y) withFont:subFont];
+            [@"…" drawAtPoint:CGPointMake(x, point.y) withAttributes:@{NSFontAttributeName: subFont}];
         }
         
         if (actualFontSize) *actualFontSize = fontSize;
@@ -441,13 +441,12 @@
     else
     {
         //use standard implementation
-        return [self drawAtPoint:point
-                        forWidth:width
-                        withFont:font
-                     minFontSize:minFontSize
-                  actualFontSize:actualFontSize
-                   lineBreakMode:lineBreakMode
-              baselineAdjustment:baselineAdjustment];
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        [style setLineBreakMode:lineBreakMode];
+        [self drawAtPoint:point withAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName : style}];
+        
+        return [self sizeWithAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName : style}];
+
     }
 }
 
@@ -485,9 +484,9 @@
     else
     {
         //use standard implementation
-        return [self sizeWithFont:font
-                constrainedToSize:size
-                    lineBreakMode:lineBreakMode];
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        [style setLineBreakMode:lineBreakMode];
+        return [self sizeWithAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName : style}];
     }
 }
 
@@ -550,10 +549,11 @@
     else
     {
         //use standard implementation
-        return [self drawInRect:rect
-                       withFont:font
-                  lineBreakMode:lineBreakMode
-                      alignment:alignment];
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        [style setLineBreakMode:lineBreakMode];
+        [self drawInRect:rect withAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName : style}];
+        
+        return [self sizeWithAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName : style}];
     }
 }
 
