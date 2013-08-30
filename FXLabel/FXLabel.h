@@ -89,6 +89,7 @@
 @property (nonatomic) CGFloat lineSpacing;
 @property (nonatomic) CGFloat characterSpacing;
 @property (nonatomic) CGFloat baselineOffset;
+@property (nonatomic) CGFloat maskOffset;
 @property (nonatomic, copy) NSDictionary *kerningTable;
 @property (nonatomic) BOOL allowOrphans;
 

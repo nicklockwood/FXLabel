@@ -742,6 +742,15 @@
     }
 }
 
+- (void)setMaskOffset:(CGFloat)maskOffset
+{
+    if (_maskOffset != maskOffset)
+    {
+        _maskOffset = maskOffset;
+        [self setNeedsDisplay];
+    }
+}
+
 - (void)setCharacterKerning:(NSDictionary *)kerningTable
 {
     if (_kerningTable != kerningTable)
@@ -919,7 +928,7 @@
     UIFont *font = [self.font fontWithSize:fontSize];
     
     //adjust for minimum height
-    textRect.size.height = MAX(textRect.size.height, font.lineHeight);
+    textRect.size.height = MAX(textRect.size.height, font.lineHeight) + _maskOffset;
     
     //set color
     UIColor *highlightedColor = self.highlightedTextColor ?: self.textColor;
@@ -984,7 +993,7 @@
     {
         //draw mask
         CGContextSaveGState(context);
-        [self FXLabel_drawTextInRect:textRect withFont:font];
+        [self FXLabel_drawTextInRect:CGRectOffset(textRect, 0, _maskOffset) withFont:font];
         CGContextRestoreGState(context);
         
         //create an image mask from what we've drawn so far
