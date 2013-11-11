@@ -1,3 +1,9 @@
+Version 1.5.3
+
+- Fixed line wrap issue when using character wrap
+- Now compiles for iOS 7+ without deprecation warnings
+- Now complies with -Wall and -WExtra warning levels
+
 Version 1.5.2
 
 - Fixed a bug in the autoshrink logic when creating labels programatically (as opposed to using a nib)

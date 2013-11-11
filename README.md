@@ -5,11 +5,13 @@ The standard iOS UILabel is fairly limited in terms of visual customisation; You
 
 FXLabel improves upon the standard UILabel by providing a subclass that supports soft shadows, inner shadow and gradient fill, and which can easily be used in place of any standard UILabel.
 
+FXLabel also provides more control over layout options such as leading (line spacing) and kerning (letter spacing) and automatic avoidance of orphans (words left on their own on the last line of a multi-line label).
+
 
 Supported iOS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 6.1 (Xcode 4.6.2, Apple LLVM compiler 4.2)
+* Supported build target - iOS 7.0 (Xcode 5.0, Apple LLVM compiler 5.0)
 * Earliest supported deployment target - iOS 5.0
 * Earliest compatible deployment target - iOS 4.3
 
@@ -161,8 +163,6 @@ Notes
 ----------------
 
 FXLabels have a nice additional layout feature, which is that (unlike UILabels) they respect the contentMode property with regard to vertical layout. Setting the contentMode to top, center or bottom will vertically align the text to the top, center or bottom of the view respectively. Note however that for horizontal alignment, the FXLabel ignores contentMode in favour of the textAlignment property.
-
-FXLabels are slower to draw than UILabels, so be wary of overusing them, especially for text that needs to be resized or animated.
 
 FXLabel effects cannot be drawn outside of the bounds of the label view. For labels with shadowBlur or shadowOffset values, you will need to increase the size of the label frame to prevent the shadow being cropped. If your text is not center-aligned, you will also need to make use of the textInsets property to inset the text from the edge of the view so the text effects are not cropped.
 
