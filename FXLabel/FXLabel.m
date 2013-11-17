@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.5.3
+//  Version 1.5.4
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -1049,6 +1049,9 @@
 
 - (void)drawRect:(CGRect)rect
 {
+    //always redraw whole label
+    rect = self.bounds;
+    
     //get drawing context
     BOOL subcontext = _oversampling > _minSamples || (self.backgroundColor && ![self.backgroundColor isEqual:[UIColor clearColor]]);
 	if (subcontext)
@@ -1058,7 +1061,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //apply insets
-    CGRect contentRect = CGRectMake(0.0f, 0.0f, self.bounds.size.width, self.bounds.size.height);
+    CGRect contentRect = rect;
     contentRect.origin.x += _textInsets.left;
     contentRect.origin.y += _textInsets.top;
     contentRect.size.width -= (_textInsets.left + _textInsets.right);
@@ -1169,9 +1172,9 @@
     {
         //clip the context
         CGContextSaveGState(context);
-        CGContextTranslateCTM(context, 0, contentRect.size.height);
+        CGContextTranslateCTM(context, 0, rect.size.height);
         CGContextScaleCTM(context, 1.0, -1.0);
-        CGContextClipToMask(context, contentRect, alphaMask);
+        CGContextClipToMask(context, rect, alphaMask);
         
         if (hasGradient)
         {

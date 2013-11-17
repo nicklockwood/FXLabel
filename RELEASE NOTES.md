@@ -1,5 +1,9 @@
-Version 1.5.3
+Version 1.5.4
 
+- Fixed distortion when using textInset with gradient
+
+Version 1.5.3
+ 
 - Fixed line wrap issue when using character wrap
 - Now compiles for iOS 7+ without deprecation warnings
 - Now complies with -Wall and -WExtra warning levels
