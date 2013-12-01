@@ -1,3 +1,12 @@
+Version 1.5.5
+
+- Fixed infinite loop when targeting iOS7+
+- Fixed text color bug when targeting iOS7+
+- Fixed linewrapping and clipping issues when targeting iOS7+
+- Translucent text is no longer rendered incorrectly if it overlaps itself due to tight kerning
+- Baseline adjustment now works correctly if not using custom linespacing
+- Now conforms to -Weverything warning level
+
 Version 1.5.4
 
 - Fixed distortion when using textInset with gradient

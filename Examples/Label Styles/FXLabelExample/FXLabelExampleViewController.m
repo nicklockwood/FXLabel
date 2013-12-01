@@ -21,57 +21,46 @@
     [super viewDidLoad];
     
     //demonstrate shadow
-    label1.shadowColor = nil;
-    label1.shadowOffset = CGSizeMake(0.0f, 2.0f);
-    label1.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.75f];
-    label1.shadowBlur = 5.0f;
+    self.label1.shadowColor = nil;
+    self.label1.shadowOffset = CGSizeMake(0.0f, 2.0f);
+    self.label1.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.75f];
+    self.label1.shadowBlur = 5.0f;
 
     //demonstrate inner shadow
-    label2.shadowColor = [UIColor colorWithWhite:1.0f alpha:0.8f];
-    label2.shadowOffset = CGSizeMake(1.0f, 1.0f);
-    label2.shadowBlur = 1.0f;
-    label2.innerShadowBlur = 2.0f;
-    label2.innerShadowColor = [UIColor colorWithWhite:0.0f alpha:0.8f];
-    label2.innerShadowOffset = CGSizeMake(1.0f, 1.0f);
+    self.label2.shadowColor = [UIColor colorWithWhite:1.0f alpha:0.8f];
+    self.label2.shadowOffset = CGSizeMake(1.0f, 1.0f);
+    self.label2.shadowBlur = 1.0f;
+    self.label2.innerShadowBlur = 2.0f;
+    self.label2.innerShadowColor = [UIColor colorWithWhite:0.0f alpha:0.8f];
+    self.label2.innerShadowOffset = CGSizeMake(1.0f, 1.0f);
     
     //demonstrate gradient fill
-    label3.gradientStartColor = [UIColor redColor];
-    label3.gradientEndColor = [UIColor blackColor];
+    self.label3.gradientStartColor = [UIColor redColor];
+    self.label3.gradientEndColor = [UIColor blackColor];
 
     //demonstrate multi-part gradient
-    label4.gradientStartPoint = CGPointMake(0.0f, 0.0f);
-    label4.gradientEndPoint = CGPointMake(1.0f, 1.0f);
-    label4.gradientColors = @[[UIColor redColor],
-                             [UIColor yellowColor],
-                             [UIColor greenColor],
-                             [UIColor cyanColor],
-                             [UIColor blueColor],
-                             [UIColor purpleColor],
-                             [UIColor redColor]];
+    self.label4.gradientStartPoint = CGPointMake(0.0f, 0.0f);
+    self.label4.gradientEndPoint = CGPointMake(1.0f, 1.0f);
+    self.label4.gradientColors = @[[UIColor redColor],
+                                   [UIColor yellowColor],
+                                   [UIColor greenColor],
+                                   [UIColor cyanColor],
+                                   [UIColor blueColor],
+                                   [UIColor purpleColor],
+                                   [UIColor redColor]];
     
     //everything
-    label5.shadowColor = [UIColor blackColor];
-    label5.shadowOffset = CGSizeZero;
-    label5.shadowBlur = 20.0f;
-    label5.innerShadowBlur = 2.0f;
-    label5.innerShadowColor = [UIColor yellowColor];
-    label5.innerShadowOffset = CGSizeMake(1.0f, 1.0f);
-    label5.gradientStartColor = [UIColor redColor];
-    label5.gradientEndColor = [UIColor yellowColor];
-    label5.gradientStartPoint = CGPointMake(0.0f, 0.5f);
-    label5.gradientEndPoint = CGPointMake(1.0f, 0.5f);
-    label5.oversampling = 2;
+    self.label5.shadowColor = [UIColor blackColor];
+    self.label5.shadowOffset = CGSizeZero;
+    self.label5.shadowBlur = 20.0f;
+    self.label5.innerShadowBlur = 2.0f;
+    self.label5.innerShadowColor = [UIColor yellowColor];
+    self.label5.innerShadowOffset = CGSizeMake(1.0f, 1.0f);
+    self.label5.gradientStartColor = [UIColor redColor];
+    self.label5.gradientEndColor = [UIColor yellowColor];
+    self.label5.gradientStartPoint = CGPointMake(0.0f, 0.5f);
+    self.label5.gradientEndPoint = CGPointMake(1.0f, 0.5f);
+    self.label5.oversampling = 2;
 }
-
-- (void)viewDidUnload
-{
-    self.label1 = nil;
-    self.label2 = nil;
-    self.label3 = nil;
-    self.label4 = nil;
-    self.label5 = nil;
-    [super viewDidUnload];
-}
-
 
 @end

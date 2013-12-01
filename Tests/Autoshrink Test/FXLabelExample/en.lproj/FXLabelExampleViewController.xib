@@ -15,7 +15,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" baselineAdjustment="none" minimumFontSize="8" id="19" customClass="FXLabel">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" baselineAdjustment="none" minimumFontSize="9" id="19" customClass="FXLabel">
                     <rect key="frame" x="32" y="206" width="73" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -23,7 +23,7 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" baselineAdjustment="none" minimumFontSize="8" id="20">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" baselineAdjustment="none" minimumFontSize="9" id="20">
                     <rect key="frame" x="215" y="206" width="73" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -31,7 +31,7 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" minimumFontSize="8" id="22" customClass="FXLabel">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" minimumFontSize="9" id="22" customClass="FXLabel">
                     <rect key="frame" x="32" y="235" width="73" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -39,7 +39,7 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" minimumFontSize="8" id="23">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" minimumFontSize="9" id="23">
                     <rect key="frame" x="215" y="235" width="73" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -47,7 +47,7 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" id="24" customClass="FXLabel">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="24" customClass="FXLabel">
                     <rect key="frame" x="32" y="264" width="73" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -55,7 +55,7 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" id="25">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A very long string" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="25">
                     <rect key="frame" x="215" y="264" width="73" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
