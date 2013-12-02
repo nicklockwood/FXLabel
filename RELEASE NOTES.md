@@ -1,3 +1,9 @@
+Version 1.5.6
+
+- Fixed performance regression introduced in version 1.5.5
+- Reverted fix for translucent overlapping text for performance reasons 
+- Improved performance when using a background color on the label
+
 Version 1.5.5
 
 - Fixed infinite loop when targeting iOS7+

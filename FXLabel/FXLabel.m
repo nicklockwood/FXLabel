@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.5.5
+//  Version 1.5.6
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -265,17 +265,19 @@
     
 }
 
-- (CGSize)FXLabel_drawAtPoint:(CGPoint)point withFont:(UIFont *)font
+- (CGSize)FXLabel_drawAtPoint:(CGPoint)point withFont:(UIFont *)font color:(UIColor *)color
 {
     
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000
     
-    [self drawAtPoint:point withAttributes:@{NSFontAttributeName: font}];
+    color = color ?: [UIColor blackColor];
+    [self drawAtPoint:point withAttributes:@{NSFontAttributeName: font, NSForegroundColorAttributeName: color}];
     return [self FXLabel_sizeWithFont:font];
     
 #else
     
     //use standard implementation
+    if (color) [color setFill];
     return [self drawAtPoint:point withFont:font];
     
 #endif
@@ -310,7 +312,7 @@
         {
             //get character width
             NSString *character = characters[i];
-            CGFloat charWidth = [character FXLabel_drawAtPoint:CGPointZero withFont:subFont].width;
+            CGFloat charWidth = [character FXLabel_drawAtPoint:CGPointZero withFont:subFont color:nil].width;
             if (i == charCount - 1 || x + charWidth > width)
             {
                 [widths addObject:@(charWidth)];
@@ -413,10 +415,14 @@
            baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
              characterSpacing:(CGFloat)characterSpacing
                  kerningTable:(NSDictionary *)kerningTable
-                    usingMask:(BOOL)usingMask
+                        color:(UIColor *)color
 {
+    BOOL usingMask = !color && FXLABEL_MIN_TARGET_IOS7;
+    if (color) [color setFill];
+    
     if (characterSpacing || [kerningTable count])
     {
+        //TODO: if characters overlap and alpha < 1 then use mask
         //TODO: doesn't correctly handle head or center truncation
         
         NSUInteger charactersFitted = 0;
@@ -474,12 +480,12 @@
         for (NSUInteger i = 0; i < charactersFitted; i++)
         {
             NSString *character = [self substringWithRange:NSMakeRange(i, 1)];
-            CGFloat charWidth = [character FXLabel_drawAtPoint:CGPointMake(x, 0) withFont:subFont].width;
+            CGFloat charWidth = [character FXLabel_drawAtPoint:CGPointMake(x, 0) withFont:subFont color:color].width;
             x += charWidth + ([kerningTable[character] floatValue] + characterSpacing) * subFont.pointSize;
         }
         if (includesEllipsis)
         {
-            [@"…" FXLabel_drawAtPoint:CGPointMake(x, 0) withFont:subFont];
+            [@"…" FXLabel_drawAtPoint:CGPointMake(x, 0) withFont:subFont color:color];
         }
         
         if (usingMask)
@@ -560,7 +566,7 @@
         style.lineBreakMode = lineBreakMode;
         
         font = [font fontWithSize:fontSize];
-        [self drawInRect:CGRectMake(0, 0, size.width, size.height) withAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: style}];
+        [self drawInRect:CGRectMake(0, 0, size.width, size.height) withAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: style, NSForegroundColorAttributeName: color ?: [UIColor blackColor]}];
         
 #else
         
@@ -659,7 +665,7 @@
                   baselineAdjustment:baselineAdjustment
                     characterSpacing:characterSpacing
                         kerningTable:kerningTable
-                           usingMask:YES];
+                               color:nil];
 }
 
 - (CGSize)sizeWithFont:(UIFont *)font
@@ -715,10 +721,15 @@
             characterSpacing:(CGFloat)characterSpacing
                 kerningTable:(NSDictionary *)kerningTable
                 allowOrphans:(BOOL)allowOrphans
-                   usingMask:(BOOL)usingMask
+                       color:(UIColor *)color
 {
+    BOOL usingMask = !color && FXLABEL_MIN_TARGET_IOS7;
+    if (color) [color setFill];
+    
     if (lineSpacing || characterSpacing || [kerningTable count] || !allowOrphans || FXLABEL_MIN_TARGET_IOS7)
     {
+        //TODO: if characters overlap and alpha < 1 then use mask
+        
         CGRect bounds = CGRectMake(0, 0, rect.size.width, rect.size.height);
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (usingMask)
@@ -772,7 +783,7 @@
                    baselineAdjustment:UIBaselineAdjustmentAlignBaselines
                      characterSpacing:characterSpacing
                          kerningTable:kerningTable
-                            usingMask:NO];
+                                color:usingMask? [UIColor blackColor]: color];
             
             total.width = MAX(total.width, offset.x + size.width);
             offset.y += roundf(font.lineHeight + font.pointSize * lineSpacing);
@@ -860,7 +871,7 @@
                    characterSpacing:characterSpacing
                        kerningTable:kerningTable
                        allowOrphans:allowOrphans
-                          usingMask:YES];
+                              color:nil];
 }
 
 @end
@@ -1173,7 +1184,7 @@
                            alpha:bRGBA[3] + (1.0f - bRGBA[3]) * aRGBA[3]];
 }
 
-- (void)FXLabel_drawTextInRect:(CGRect)rect withFont:(UIFont *)font usingMask:(BOOL)usingMask
+- (void)FXLabel_drawTextInRect:(CGRect)rect withFont:(UIFont *)font color:(UIColor *)color
 {
     rect.origin.y += font.pointSize * _baselineOffset;
     if (self.numberOfLines == 1)
@@ -1187,7 +1198,7 @@
                     baselineAdjustment:self.baselineAdjustment
                       characterSpacing:_characterSpacing
                           kerningTable:_kerningTable
-                             usingMask:usingMask];
+                                 color:color];
     }
     else
     {
@@ -1199,7 +1210,7 @@
                      characterSpacing:_characterSpacing
                          kerningTable:_kerningTable
                          allowOrphans:_allowOrphans
-                            usingMask:usingMask];
+                                color:color];
     }
 }
 
@@ -1216,11 +1227,12 @@
     ![_innerShadowColor isEqual:[UIColor clearColor]] &&
     (_innerShadowBlur > 0.0f || !CGSizeEqualToSize(_innerShadowOffset, CGSizeZero));
     
+    BOOL hasBackgroundImage = CGColorGetPattern(self.backgroundColor.CGColor) != NULL;
     BOOL hasGradient = [_gradientColors count] > 1;
     BOOL needsMask = hasInnerShadow || hasGradient;
     
     //get context
-    BOOL subcontext = _oversampling > _minSamples || hasShadow || (self.backgroundColor && ![self.backgroundColor isEqual:[UIColor clearColor]]);
+    BOOL subcontext = _oversampling > _minSamples || hasShadow || hasBackgroundImage;
 	if (subcontext)
     {
         UIGraphicsBeginImageContextWithOptions(rect.size, NO, _oversampling);
@@ -1305,8 +1317,8 @@
     {
         //draw mask
         CGContextSaveGState(context);
-        [[UIColor blackColor] setFill];
-        [self FXLabel_drawTextInRect:textRect withFont:font usingMask:NO];
+        CGContextClipToRect(context, textRect);
+        [self FXLabel_drawTextInRect:textRect withFont:font color:[UIColor blackColor]];
         CGContextRestoreGState(context);
         
         //create an image mask from what we've drawn so far
@@ -1380,8 +1392,7 @@
     else
     {
         //just draw the text
-        [textColor setFill];
-        [self FXLabel_drawTextInRect:textRect withFont:font usingMask:YES];
+        [self FXLabel_drawTextInRect:textRect withFont:font color:textColor];
     }
     
     if (subcontext)
