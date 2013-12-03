@@ -272,12 +272,12 @@
     
     color = color ?: [UIColor blackColor];
     [self drawAtPoint:point withAttributes:@{NSFontAttributeName: font, NSForegroundColorAttributeName: color}];
-    return [self FXLabel_sizeWithFont:font];
+    return [self sizeWithAttributes:@{NSFontAttributeName: font}];
     
 #else
     
     //use standard implementation
-    if (color) [color setFill];
+    [color setFill];
     return [self drawAtPoint:point withFont:font];
     
 #endif
@@ -417,64 +417,96 @@
                  kerningTable:(NSDictionary *)kerningTable
                         color:(UIColor *)color
 {
-    BOOL usingMask = !color && FXLABEL_MIN_TARGET_IOS7;
-    if (color) [color setFill];
+    NSUInteger charactersFitted = 0;
+    BOOL includesEllipsis = NO;
+    CGFloat fontSize = font.pointSize;
+    CGSize size = CGSizeZero;
     
-    if (characterSpacing || [kerningTable count])
+    BOOL drawCharByChar = characterSpacing || [kerningTable count];
+    if (drawCharByChar)
     {
-        //TODO: if characters overlap and alpha < 1 then use mask
-        //TODO: doesn't correctly handle head or center truncation
+        size = [self FXLabel_sizeWithFont:font
+                              minFontSize:minFontSize
+                           actualFontSize:&fontSize
+                                 forWidth:width
+                            lineBreakMode:lineBreakMode
+                         characterSpacing:characterSpacing
+                             kerningTable:kerningTable
+                         charactersFitted:&charactersFitted
+                         includesEllipsis:&includesEllipsis];
+    }
+    else
+    {
         
-        NSUInteger charactersFitted = 0;
-        BOOL includesEllipsis = NO;
-        CGFloat fontSize = font.pointSize;
-        CGSize size = [self FXLabel_sizeWithFont:font
-                                     minFontSize:minFontSize
-                                  actualFontSize:&fontSize
-                                        forWidth:width
-                                   lineBreakMode:lineBreakMode
-                                characterSpacing:characterSpacing
-                                    kerningTable:kerningTable
-                                charactersFitted:&charactersFitted
-                                includesEllipsis:&includesEllipsis];
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000
         
-        CGFloat y = point.y;
-        UIFont *subFont = [font fontWithSize:fontSize];
-        if (fontSize < font.pointSize)
+        minFontSize = MIN(fontSize, minFontSize);
+        size = CGSizeMake(INFINITY, font.lineHeight);
+        while (size.width > width && fontSize >= minFontSize)
         {
-            switch (baselineAdjustment)
+            size.width = [self sizeWithAttributes:@{NSFontAttributeName: [font fontWithSize:fontSize]}].width;
+            fontSize -= 1;
+        }
+        fontSize = MAX(fontSize, minFontSize);
+        size.width = MIN(width, size.width);
+        
+#else
+        
+        size = [self sizeWithFont:font
+                      minFontSize:minFontSize
+                   actualFontSize:&fontSize
+                         forWidth:width
+                    lineBreakMode:lineBreakMode];
+        
+#endif
+        
+    }
+    
+    //adjust baseline
+    CGFloat y = point.y;
+    UIFont *subFont = [font fontWithSize:fontSize];
+    if (fontSize < font.pointSize)
+    {
+        switch (baselineAdjustment)
+        {
+            case UIBaselineAdjustmentAlignCenters:
             {
-                case UIBaselineAdjustmentAlignCenters:
-                {
-                    y += (font.lineHeight - subFont.lineHeight) / 2.0f;
-                    break;
-                }
-                case UIBaselineAdjustmentAlignBaselines:
-                {
-                    y += (font.ascender - subFont.ascender);
-                    break;
-                }
-                case UIBaselineAdjustmentNone:
-                {
-                    //no adjustment needed
-                    break;
-                }
+                y += (font.lineHeight - subFont.lineHeight) / 2.0f;
+                break;
+            }
+            case UIBaselineAdjustmentAlignBaselines:
+            {
+                y += (font.ascender - subFont.ascender);
+                break;
+            }
+            case UIBaselineAdjustmentNone:
+            {
+                //no adjustment needed
+                break;
             }
         }
-        
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        if (usingMask)
-        {
-            //create image context with correct scale
-            CGAffineTransform ctm = CGContextGetCTM(context);
-            UIGraphicsBeginImageContextWithOptions(size, NO, ctm.a);
-            context = UIGraphicsGetCurrentContext();
-        }
-        else
-        {
-            CGContextSaveGState(context);
-            CGContextTranslateCTM(context, point.x, y);
-        }
+    }
+    
+    //TODO: if characters overlap and alpha < 1 then use mask
+    
+    BOOL usingMask = !color && FXLABEL_MIN_TARGET_IOS7;
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    if (usingMask)
+    {
+        //create image context with correct scale
+        CGAffineTransform ctm = CGContextGetCTM(context);
+        UIGraphicsBeginImageContextWithOptions(size, NO, ctm.a);
+        context = UIGraphicsGetCurrentContext();
+    }
+    else
+    {
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, point.x, y);
+    }
+    
+    if (drawCharByChar)
+    {
+        //TODO: doesn't correctly handle head or center truncation
         
         CGFloat x = 0;
         for (NSUInteger i = 0; i < charactersFitted; i++)
@@ -487,163 +519,44 @@
         {
             [@"…" FXLabel_drawAtPoint:CGPointMake(x, 0) withFont:subFont color:color];
         }
-        
-        if (usingMask)
-        {
-            CGImageRef alphaMask = CGBitmapContextCreateImage(context);
-            UIGraphicsEndImageContext();
-            
-            context = UIGraphicsGetCurrentContext();
-            CGRect rect = CGRectMake(0, 0, size.width, size.height);
-            CGContextSaveGState(context);
-            CGContextTranslateCTM(context, point.x, size.height + y);
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextClipToMask(context, rect, alphaMask);
-            CGImageRelease(alphaMask);
-            CGContextFillRect(context, rect);
-        }
-        CGContextRestoreGState(context);
-        
-        if (actualFontSize) *actualFontSize = fontSize;
-        return size;
     }
     else
     {
         
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000
         
-        minFontSize = MIN(font.pointSize, minFontSize);
-        
-        CGFloat fontSize = font.pointSize;
-        CGSize size = CGSizeMake(INFINITY, font.lineHeight);
-        while (size.width > width && fontSize >= minFontSize)
-        {
-            size.width = [self sizeWithAttributes:@{NSFontAttributeName: [font fontWithSize:fontSize]}].width;
-            fontSize -= 1;
-        }
-        fontSize = MAX(fontSize, minFontSize);
-        size.width = MIN(width, size.width);
-        
-        CGFloat y = point.y;
-        UIFont *subFont = [font fontWithSize:fontSize];
-        if (fontSize < font.pointSize)
-        {
-            switch (baselineAdjustment)
-            {
-                case UIBaselineAdjustmentAlignCenters:
-                {
-                    y += (font.lineHeight - subFont.lineHeight) / 2.0f;
-                    break;
-                }
-                case UIBaselineAdjustmentAlignBaselines:
-                {
-                    y += (font.ascender - subFont.ascender);
-                    break;
-                }
-                case UIBaselineAdjustmentNone:
-                {
-                    //no adjustment needed
-                    break;
-                }
-            }
-        }
-        
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        if (usingMask)
-        {
-            //create image context with correct scale
-            CGAffineTransform ctm = CGContextGetCTM(context);
-            UIGraphicsBeginImageContextWithOptions(size, NO, ctm.a);
-            context = UIGraphicsGetCurrentContext();
-        }
-        else
-        {
-            CGContextSaveGState(context);
-            CGContextTranslateCTM(context, point.x, y);
-        }
-        
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.lineBreakMode = lineBreakMode;
-        
-        font = [font fontWithSize:fontSize];
-        [self drawInRect:CGRectMake(0, 0, size.width, size.height) withAttributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: style, NSForegroundColorAttributeName: color ?: [UIColor blackColor]}];
+        [self drawInRect:CGRectMake(0, 0, size.width, size.height) withAttributes:@{NSFontAttributeName: subFont, NSParagraphStyleAttributeName: style, NSForegroundColorAttributeName: color ?: [UIColor blackColor]}];
         
 #else
         
-        CGFloat fontSize = 0;
-        CGSize size = [self sizeWithFont:font
-                             minFontSize:minFontSize
-                          actualFontSize:&fontSize
-                                forWidth:width
-                           lineBreakMode:lineBreakMode];
-        
-        CGFloat y = point.y;
-        UIFont *subFont = [font fontWithSize:fontSize];
-        if (fontSize < font.pointSize)
-        {
-            switch (baselineAdjustment)
-            {
-                case UIBaselineAdjustmentAlignCenters:
-                {
-                    y += (font.lineHeight - subFont.lineHeight) / 2.0f;
-                    break;
-                }
-                case UIBaselineAdjustmentAlignBaselines:
-                {
-                    y += (font.ascender - subFont.ascender);
-                    break;
-                }
-                case UIBaselineAdjustmentNone:
-                {
-                    //no adjustment needed
-                    break;
-                }
-            }
-        }
-        
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        if (usingMask)
-        {
-            //create image context with correct scale
-            CGAffineTransform ctm = CGContextGetCTM(context);
-            UIGraphicsBeginImageContextWithOptions(size, NO, ctm.a);
-            context = UIGraphicsGetCurrentContext();
-        }
-        else
-        {
-            CGContextSaveGState(context);
-            CGContextTranslateCTM(context, point.x, y);
-        }
-        
-        [self drawAtPoint:CGPointZero
-                 forWidth:width
-                 withFont:font
-              minFontSize:minFontSize
-           actualFontSize:actualFontSize
-            lineBreakMode:lineBreakMode
-       baselineAdjustment:baselineAdjustment];
+        //use standard implementation
+        [color setFill];
+        [self drawAtPoint:CGPointZero forWidth:width withFont:subFont minFontSize:fontSize actualFontSize:NULL lineBreakMode:lineBreakMode baselineAdjustment:UIBaselineAdjustmentNone];
         
 #endif
         
-        if (usingMask)
-        {
-            CGImageRef alphaMask = CGBitmapContextCreateImage(context);
-            UIGraphicsEndImageContext();
-            
-            context = UIGraphicsGetCurrentContext();
-            CGRect rect = CGRectMake(0, 0, size.width, size.height);
-            CGContextSaveGState(context);
-            CGContextTranslateCTM(context, point.x, size.height + point.y);
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextClipToMask(context, rect, alphaMask);
-            CGImageRelease(alphaMask);
-            CGContextFillRect(context, rect);
-        }
-        CGContextRestoreGState(context);
-        
-        if (actualFontSize) *actualFontSize = fontSize;
-        return size;
     }
+    
+    if (usingMask)
+    {
+        CGImageRef alphaMask = CGBitmapContextCreateImage(context);
+        UIGraphicsEndImageContext();
+        
+        context = UIGraphicsGetCurrentContext();
+        CGRect rect = CGRectMake(0, 0, size.width, size.height);
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, point.x, size.height + y);
+        CGContextScaleCTM(context, 1.0, -1.0);
+        CGContextClipToMask(context, rect, alphaMask);
+        CGImageRelease(alphaMask);
+        CGContextFillRect(context, rect);
+    }
+    CGContextRestoreGState(context);
+    
+    if (actualFontSize) *actualFontSize = fontSize;
+    return size;
 }
 
 - (CGSize)drawAtPoint:(CGPoint)point
@@ -704,6 +617,7 @@
         
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 70000
         
+        //use standard implementation
         return [self sizeWithFont:font
                 constrainedToSize:size
                     lineBreakMode:lineBreakMode];
@@ -723,27 +637,9 @@
                 allowOrphans:(BOOL)allowOrphans
                        color:(UIColor *)color
 {
-    BOOL usingMask = !color && FXLABEL_MIN_TARGET_IOS7;
-    if (color) [color setFill];
-    
     if (lineSpacing || characterSpacing || [kerningTable count] || !allowOrphans || FXLABEL_MIN_TARGET_IOS7)
     {
         //TODO: if characters overlap and alpha < 1 then use mask
-        
-        CGRect bounds = CGRectMake(0, 0, rect.size.width, rect.size.height);
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        if (usingMask)
-        {
-            //create image context with correct scale
-            CGAffineTransform ctm = CGContextGetCTM(context);
-            UIGraphicsBeginImageContextWithOptions(bounds.size, NO, ctm.a);
-            context = UIGraphicsGetCurrentContext();
-        }
-        else
-        {
-            CGContextSaveGState(context);
-            CGContextTranslateCTM(context, rect.origin.x, rect.origin.y);
-        }
         
         NSArray *lines = [self FXLabel_linesWithFont:font
                                    constrainedToSize:rect.size
@@ -754,7 +650,7 @@
                                         allowOrphans:allowOrphans];
         CGSize total = CGSizeZero;
         total.height = [lines count] * font.lineHeight + ([lines count] - 1) * roundf(font.pointSize * lineSpacing);
-        CGPoint offset = CGPointZero;
+        CGPoint offset = rect.origin;
         for (NSString *line in lines)
         {
             CGSize size = [line sizeWithFont:font
@@ -767,11 +663,11 @@
             
             if (alignment == NSTextAlignmentCenter)
             {
-                offset.x = roundf((rect.size.width - size.width)/ 2.0f);
+                offset.x = roundf(rect.origin.x + (rect.size.width - size.width)/ 2.0f);
             }
             else if (alignment == NSTextAlignmentRight)
             {
-                offset.x = roundf(rect.size.width - size.width);
+                offset.x = roundf(rect.origin.x + rect.size.width - size.width);
             }
             
             [line FXLabel_drawAtPoint:offset
@@ -783,26 +679,11 @@
                    baselineAdjustment:UIBaselineAdjustmentAlignBaselines
                      characterSpacing:characterSpacing
                          kerningTable:kerningTable
-                                color:usingMask? [UIColor blackColor]: color];
+                                color:color];
             
             total.width = MAX(total.width, offset.x + size.width);
             offset.y += roundf(font.lineHeight + font.pointSize * lineSpacing);
         }
-        
-        if (usingMask)
-        {
-            CGImageRef alphaMask = CGBitmapContextCreateImage(context);
-            UIGraphicsEndImageContext();
-            
-            context = UIGraphicsGetCurrentContext();
-            CGContextSaveGState(context);
-            CGContextTranslateCTM(context, rect.origin.x, bounds.size.height + rect.origin.y);
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextClipToMask(context, bounds, alphaMask);
-            CGImageRelease(alphaMask);
-            CGContextFillRect(context, bounds);
-        }
-        CGContextRestoreGState(context);
         
         return total;
     }
@@ -811,43 +692,12 @@
         
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 70000
         
-        CGRect bounds = CGRectMake(0, 0, rect.size.width, rect.size.height);
-        
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        if (usingMask)
-        {
-            //create image context with correct scale
-            CGAffineTransform ctm = CGContextGetCTM(context);
-            UIGraphicsBeginImageContextWithOptions(bounds.size, NO, ctm.a);
-            context = UIGraphicsGetCurrentContext();
-        }
-        else
-        {
-            CGContextSaveGState(context);
-            CGContextTranslateCTM(context, rect.origin.x, rect.origin.y);
-        }
-        
-        CGSize size = [self drawInRect:bounds
-                              withFont:font
-                         lineBreakMode:lineBreakMode
-                             alignment:alignment];
-        
-        if (usingMask)
-        {
-            CGImageRef alphaMask = CGBitmapContextCreateImage(context);
-            UIGraphicsEndImageContext();
-            
-            context = UIGraphicsGetCurrentContext();
-            CGContextSaveGState(context);
-            CGContextTranslateCTM(context, rect.origin.x, bounds.size.height + rect.origin.y);
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextClipToMask(context, bounds, alphaMask);
-            CGImageRelease(alphaMask);
-            CGContextFillRect(context, bounds);
-        }
-        CGContextRestoreGState(context);
-        
-        return size;
+        //use standard implementation
+        [color setFill];
+        return [self drawInRect:rect
+                       withFont:font
+                  lineBreakMode:lineBreakMode
+                      alignment:alignment];
         
 #endif
         
