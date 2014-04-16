@@ -655,12 +655,12 @@
         for (NSString *line in lines)
         {
             total.width = ceil(MAX(total.width, [line sizeWithFont:font
-                                                        minFontSize:font.pointSize
-                                                     actualFontSize:NULL
-                                                           forWidth:size.width
-                                                      lineBreakMode:lineBreakMode
-                                                   characterSpacing:characterSpacing
-                                                       kerningTable:kerningTable].width));
+                                                       minFontSize:font.pointSize
+                                                    actualFontSize:NULL
+                                                          forWidth:size.width
+                                                     lineBreakMode:lineBreakMode
+                                                  characterSpacing:characterSpacing
+                                                      kerningTable:kerningTable].width));
         }
         return total;
     }
@@ -993,25 +993,37 @@
         CGFloat minimumFontSize = self.adjustsFontSizeToFitWidth? self.minimumScaleFactor * self.font.pointSize: self.font.pointSize;
         
 #endif
-        size = [self.text sizeWithFont:self.font
-                           minFontSize:minimumFontSize
-                        actualFontSize:actualFontSize
-                              forWidth:size.width
-                         lineBreakMode:self.lineBreakMode
-                      characterSpacing:self.characterSpacing
-                          kerningTable:self.kerningTable];
+        if(self.attributedText==nil)
+        {
+            size = [self.text sizeWithFont:self.font
+                               minFontSize:minimumFontSize
+                            actualFontSize:actualFontSize
+                                  forWidth:size.width
+                             lineBreakMode:self.lineBreakMode
+                          characterSpacing:self.characterSpacing
+                              kerningTable:self.kerningTable];
+        }else
+        {
+            size = [self.attributedText boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine context:nil].size;
+        }
     }
     else
     {
         if (actualFontSize) *actualFontSize = self.font.pointSize;
         
-        size = [self.text sizeWithFont:self.font
-                     constrainedToSize:size
-                         lineBreakMode:self.lineBreakMode
-                           lineSpacing:self.lineSpacing
-                      characterSpacing:self.characterSpacing
-                          kerningTable:self.kerningTable
-                          allowOrphans:self.allowOrphans];
+        if(self.attributedText==nil)
+        {
+            size = [self.text sizeWithFont:self.font
+                         constrainedToSize:size
+                             lineBreakMode:self.lineBreakMode
+                               lineSpacing:self.lineSpacing
+                          characterSpacing:self.characterSpacing
+                              kerningTable:self.kerningTable
+                              allowOrphans:self.allowOrphans];
+        }else
+        {
+            size = [self.attributedText boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine context:nil].size;
+        }
         
         if (self.numberOfLines > 0)
         {
@@ -1090,6 +1102,11 @@
 - (void)FXLabel_drawTextInRect:(CGRect)rect withFont:(UIFont *)font color:(UIColor *)color
 {
     rect.origin.y += font.pointSize * self.baselineOffset;
+    if(self.attributedText!=nil)
+    {
+        [self.attributedText drawInRect:rect];
+        return;
+    }
     if (self.numberOfLines == 1)
     {
         [self.text FXLabel_drawAtPoint:rect.origin
