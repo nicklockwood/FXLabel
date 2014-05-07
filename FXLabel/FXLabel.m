@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.5.7
+//  Version 1.5.8
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -344,7 +344,7 @@
             //get character width
             NSString *character = characters[i];
             CGFloat charWidth = [character FXLabel_sizeWithFont:subFont].width;
-            if (i == charCount - 1 || x + charWidth > width)
+            if (i == charCount - 1)
             {
                 [widths addObject:@(charWidth)];
                 x += charWidth;
