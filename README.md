@@ -172,6 +172,10 @@ The gradientColor properties do not support patterned, indexed or HSV colours.
 Release notes:
 -------------------
 
+Version 1.5.8
+
+- Fixed autoshrink when targeting iOS 7 or higher
+
 Version 1.5.7
 
 - Fixed some additional warnings under iOS 7.1

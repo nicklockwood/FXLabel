@@ -344,18 +344,12 @@
             //get character width
             NSString *character = characters[i];
             CGFloat charWidth = [character FXLabel_sizeWithFont:subFont].width;
-            if (i == charCount - 1)
-            {
-                [widths addObject:@(charWidth)];
-                x += charWidth;
-                break;
-            }
-            else
+            if (i < charCount - 1)
             {
                 charWidth += ([kerningTable[character] floatValue] + characterSpacing) * subFont.pointSize;
-                [widths addObject:@(charWidth)];
-                x += charWidth;
             }
+            [widths addObject:@(charWidth)];
+            x += charWidth;
         }
         if (floor(x) <= ceil(width))
         {
