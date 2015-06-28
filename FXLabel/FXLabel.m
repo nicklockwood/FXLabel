@@ -30,6 +30,9 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //
 
+#ifndef IB_DESIGNABLE
+#define IB_DESIGNABLE
+#endif
 
 #pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
 #pragma GCC diagnostic ignored "-Wdirect-ivar-access"
@@ -50,7 +53,6 @@
 #else
 #define FXLABEL_MIN_TARGET_IOS7 0
 #endif
-
 
 @implementation NSString (FXLabelDrawing)
 
@@ -773,6 +775,7 @@
 @end
 
 
+IB_DESIGNABLE
 @interface FXLabel ()
 
 @property (nonatomic, assign) NSUInteger minSamples;
