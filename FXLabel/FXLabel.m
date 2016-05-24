@@ -1,7 +1,7 @@
 //
 //  FXLabel.m
 //
-//  Version 1.5.8
+//  Version 1.5.9
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -30,13 +30,11 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //
 
-#ifndef IB_DESIGNABLE
-#define IB_DESIGNABLE
-#endif
-
-#pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
-#pragma GCC diagnostic ignored "-Wdirect-ivar-access"
-#pragma GCC diagnostic ignored "-Wgnu"
+#pragma clang diagnostic ignored "-Wobjc-missing-property-synthesis"
+#pragma clang diagnostic ignored "-Wdirect-ivar-access"
+#pragma clang diagnostic ignored "-Wdouble-promotion"
+#pragma clang diagnostic ignored "-Wfloat-conversion"
+#pragma clang diagnostic ignored "-Wgnu"
 
 
 #import "FXLabel.h"
@@ -97,41 +95,41 @@
              nil] containsObject:self];
 }
 
-- (NSArray *)FXLabel_characters
+- (NSArray<NSString *> *)FXLabel_characters
 {
     NSMutableArray *characters = [NSMutableArray array];
-    [self enumerateSubstringsInRange:NSMakeRange(0, [self length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:^(NSString *substring, __unused NSRange substringRange, __unused NSRange enclosingRange, __unused BOOL *stop) {
+    [self enumerateSubstringsInRange:NSMakeRange(0, self.length) options:NSStringEnumerationByComposedCharacterSequences usingBlock:^(NSString *substring, __unused NSRange substringRange, __unused NSRange enclosingRange, __unused BOOL *stop) {
         
         [characters addObject:substring];
     }];
     return characters;
 }
 
-- (NSArray *)FXLabel_linesWithFont:(UIFont *)font
-                 constrainedToSize:(CGSize)size
-                     lineBreakMode:(NSLineBreakMode)lineBreakMode
-                       lineSpacing:(CGFloat)lineSpacing
-                  characterSpacing:(CGFloat)characterSpacing
-                      kerningTable:(NSDictionary *)kerningTable
-                      allowOrphans:(BOOL)allowOrphans
+- (NSArray<NSString *> *)FXLabel_linesWithFont:(UIFont *)font
+                             constrainedToSize:(CGSize)size
+                                 lineBreakMode:(NSLineBreakMode)lineBreakMode
+                                   lineSpacing:(CGFloat)lineSpacing
+                              characterSpacing:(CGFloat)characterSpacing
+                                  kerningTable:(NSDictionary<NSString *, NSNumber *> *)kerningTable
+                                  allowOrphans:(BOOL)allowOrphans
 {
     NSUInteger index = 0;
     NSMutableArray *lines = [NSMutableArray array];
     if (lineBreakMode == NSLineBreakByCharWrapping)
     {
         //split text into individual characters
-        NSArray *characters = [self FXLabel_characters];
+        NSArray<NSString *> *characters = [self FXLabel_characters];
         
         //calculate lines
-        while (index < [characters count])
+        while (index < characters.count)
         {
-            NSUInteger lineCount = [lines count];
+            NSUInteger lineCount = lines.count;
             if (lineCount && ((lineCount + 1) * font.lineHeight + lineCount * round(font.pointSize * lineSpacing)) > size.height)
             {
                 //append remaining text to last line
-                NSArray *remainingChars = [characters subarrayWithRange:NSMakeRange(index, [characters count] - index)];
-                NSString *line = [lines lastObject];
-                NSString *newLine = [line length]? line: @"";
+                NSArray<NSString *> *remainingChars = [characters subarrayWithRange:NSMakeRange(index, characters.count - index)];
+                NSString *line = lines.lastObject;
+                NSString *newLine = line.length? line: @"";
                 newLine = [newLine stringByAppendingString:[remainingChars componentsJoinedByString:@""]];
                 newLine = [newLine stringByReplacingOccurrencesOfString:@"\n " withString:@"\n"];
                 newLine = [newLine stringByReplacingOccurrencesOfString:@" \n" withString:@"\n"];
@@ -139,7 +137,7 @@
                 break;
             }
             NSString *line = nil;
-            for (NSUInteger i = index; i < [characters count]; i++)
+            for (NSUInteger i = index; i < characters.count; i++)
             {
                 NSString *character = characters[i];
                 NSString *newLine = line? [line stringByAppendingString:character]: character;
@@ -165,7 +163,7 @@
                     index = i;
                     break;
                 }
-                else if (i == [characters count] - 1)
+                else if (i == characters.count - 1)
                 {
                     //add line and finish
                     [lines addObject:newLine];
@@ -186,7 +184,7 @@
         
         //split text into words
         NSMutableArray *words = [NSMutableArray array];
-        [self enumerateSubstringsInRange:NSMakeRange(0, [self length]) options:NSStringEnumerationByLines usingBlock:^(NSString *substring, __unused NSRange substringRange, __unused NSRange enclosingRange, __unused BOOL *stop) {
+        [self enumerateSubstringsInRange:NSMakeRange(0, self.length) options:NSStringEnumerationByLines usingBlock:^(NSString *substring, __unused NSRange substringRange, __unused NSRange enclosingRange, __unused BOOL *stop) {
             
             [words addObjectsFromArray:[substring componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
             
@@ -195,15 +193,15 @@
         [words removeLastObject];
         
         //calculate lines
-        while (index < [words count])
+        while (index < words.count)
         {
-            NSUInteger lineCount = [lines count];
+            NSUInteger lineCount = lines.count;
             if (lineCount && ((lineCount + 1) * font.lineHeight + lineCount * round(font.pointSize * lineSpacing)) > size.height)
             {
                 //append remaining text to last line
-                NSArray *remainingWords = [words subarrayWithRange:NSMakeRange(index, [words count] - index)];
-                NSString *line = [lines lastObject];
-                NSString *newLine = [line length]? [line stringByAppendingString:@" "]: @"";
+                NSArray<NSString *> *remainingWords = [words subarrayWithRange:NSMakeRange(index, words.count - index)];
+                NSString *line = lines.lastObject;
+                NSString *newLine = line.length? [line stringByAppendingString:@" "]: @"";
                 newLine = [newLine stringByAppendingString:[remainingWords componentsJoinedByString:@" "]];
                 newLine = [newLine stringByReplacingOccurrencesOfString:@"\n " withString:@"\n"];
                 newLine = [newLine stringByReplacingOccurrencesOfString:@" \n" withString:@"\n"];
@@ -211,7 +209,7 @@
                 break;
             }
             NSString *line = nil;
-            for (NSUInteger i = index; i < [words count]; i++)
+            for (NSUInteger i = index; i < words.count; i++)
             {
                 NSString *word = words[i];
                 NSString *newLine = line? [line stringByAppendingFormat:@" %@", word]: word;
@@ -234,7 +232,7 @@
                 {
                     //check for orphans
                     if (!allowOrphans && i > 0 &&
-                        (i == [words count] - 1 || [words[i + 1] isEqualToString:@"\n"]) &&
+                        (i == words.count - 1 || [words[i + 1] isEqualToString:@"\n"]) &&
                         ![words[i - 1] FXLabel_isPunctuation])
                     {
                         //force line break
@@ -251,7 +249,7 @@
                     index = i;
                     break;
                 }
-                else if (i == [words count] - 1)
+                else if (i == words.count - 1)
                 {
                     //add line and finish
                     [lines addObject:newLine];
@@ -310,7 +308,7 @@
                       forWidth:(CGFloat)width
                  lineBreakMode:(NSLineBreakMode)lineBreakMode
               characterSpacing:(CGFloat)characterSpacing
-                  kerningTable:(NSDictionary *)kerningTable
+                  kerningTable:(NSDictionary<NSString *, NSNumber *> *)kerningTable
               charactersFitted:(NSUInteger *)charactersFitted
               includesEllipsis:(BOOL *)includesEllipsis
 {
@@ -338,8 +336,8 @@
         
         NSUInteger i = 0;
         CGFloat x = 0.0f;
-        NSArray *characters = [self FXLabel_characters];
-        NSUInteger charCount = [characters count];
+        NSArray<NSString *> *characters = [self FXLabel_characters];
+        NSUInteger charCount = characters.count;
         NSMutableArray *widths = [NSMutableArray arrayWithCapacity:charCount];
         for (i = 0; i < charCount; i++)
         {
@@ -367,7 +365,7 @@
             if (lineBreakMode == NSLineBreakByClipping)
             {
                 //subtract width of last character
-                x -= [[widths lastObject] floatValue];
+                x -= [widths.lastObject floatValue];
                 
                 [self FXLabel_popSizingContext];
                 if (actualFontSize) *actualFontSize = subFont.pointSize;
@@ -389,7 +387,7 @@
                 else
                 {
                     //remove enough characters to allow space for ellipsis
-                    for (i = [widths count] - 1;; i--)
+                    for (i = widths.count - 1;; i--)
                     {
                         x -= [widths[i] floatValue];
                         if (i == 0 || x + ellipsisWidth <= width) break;
@@ -417,9 +415,9 @@
               forWidth:(CGFloat)width
          lineBreakMode:(NSLineBreakMode)lineBreakMode
       characterSpacing:(CGFloat)characterSpacing
-          kerningTable:(NSDictionary *)kerningTable
+          kerningTable:(NSDictionary<NSString *, NSNumber *> *)kerningTable
 {
-    if (characterSpacing || [kerningTable count] || FXLABEL_MIN_TARGET_IOS7)
+    if (characterSpacing || kerningTable.count || FXLABEL_MIN_TARGET_IOS7)
     {
         CGSize size = [self FXLabel_sizeWithFont:font
                                      minFontSize:minFontSize
@@ -459,7 +457,7 @@
                 lineBreakMode:(NSLineBreakMode)lineBreakMode
            baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
              characterSpacing:(CGFloat)characterSpacing
-                 kerningTable:(NSDictionary *)kerningTable
+                 kerningTable:(NSDictionary<NSString *, NSNumber *> *)kerningTable
                         color:(UIColor *)color
 {
     NSUInteger charactersFitted = 0;
@@ -470,7 +468,7 @@
     //TODO: if characters overlap and alpha < 1 then use mask
     BOOL usingMask = !color && FXLABEL_MIN_TARGET_IOS7;
     
-    BOOL drawCharByChar = characterSpacing || [kerningTable count];
+    BOOL drawCharByChar = characterSpacing || kerningTable.count;
     if (drawCharByChar)
     {
         size = [self FXLabel_sizeWithFont:font
@@ -615,7 +613,7 @@
         lineBreakMode:(NSLineBreakMode)lineBreakMode
    baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
      characterSpacing:(CGFloat)characterSpacing
-         kerningTable:(NSDictionary *)kerningTable
+         kerningTable:(NSDictionary<NSString *, NSNumber *> *)kerningTable
 {
     return [self FXLabel_drawAtPoint:point
                             forWidth:width
@@ -634,18 +632,18 @@
          lineBreakMode:(NSLineBreakMode)lineBreakMode
            lineSpacing:(CGFloat)lineSpacing
       characterSpacing:(CGFloat)characterSpacing
-          kerningTable:(NSDictionary *)kerningTable
+          kerningTable:(NSDictionary<NSString *, NSNumber *> *)kerningTable
           allowOrphans:(BOOL)allowOrphans
 {
-    if (lineSpacing || characterSpacing || [kerningTable count] || !allowOrphans || FXLABEL_MIN_TARGET_IOS7)
+    if (lineSpacing || characterSpacing || kerningTable.count || !allowOrphans || FXLABEL_MIN_TARGET_IOS7)
     {
-        NSArray *lines = [self FXLabel_linesWithFont:font
-                                   constrainedToSize:size
-                                       lineBreakMode:lineBreakMode
-                                         lineSpacing:lineSpacing
-                                    characterSpacing:characterSpacing
-                                        kerningTable:kerningTable
-                                        allowOrphans:allowOrphans];
+        NSArray<NSString *> *lines = [self FXLabel_linesWithFont:font
+                                               constrainedToSize:size
+                                                   lineBreakMode:lineBreakMode
+                                                     lineSpacing:lineSpacing
+                                                characterSpacing:characterSpacing
+                                                    kerningTable:kerningTable
+                                                    allowOrphans:allowOrphans];
         CGSize total = CGSizeZero;
         total.height = ceil(MIN(size.height, [lines count] * font.lineHeight + ([lines count] - 1) * round(font.pointSize *lineSpacing)));
         for (NSString *line in lines)
@@ -681,23 +679,23 @@
                    alignment:(NSTextAlignment)alignment
                  lineSpacing:(CGFloat)lineSpacing
             characterSpacing:(CGFloat)characterSpacing
-                kerningTable:(NSDictionary *)kerningTable
+                kerningTable:(NSDictionary<NSString *, NSNumber *> *)kerningTable
                 allowOrphans:(BOOL)allowOrphans
                        color:(UIColor *)color
 {
-    if (lineSpacing || characterSpacing || [kerningTable count] || !allowOrphans || FXLABEL_MIN_TARGET_IOS7)
+    if (lineSpacing || characterSpacing || kerningTable.count || !allowOrphans || FXLABEL_MIN_TARGET_IOS7)
     {
         //TODO: if characters overlap and alpha < 1 then use mask
         
-        NSArray *lines = [self FXLabel_linesWithFont:font
-                                   constrainedToSize:rect.size
-                                       lineBreakMode:lineBreakMode
-                                         lineSpacing:lineSpacing
-                                    characterSpacing:characterSpacing
-                                        kerningTable:kerningTable
-                                        allowOrphans:allowOrphans];
+        NSArray<NSString *> *lines = [self FXLabel_linesWithFont:font
+                                               constrainedToSize:rect.size
+                                                   lineBreakMode:lineBreakMode
+                                                     lineSpacing:lineSpacing
+                                                characterSpacing:characterSpacing
+                                                    kerningTable:kerningTable
+                                                    allowOrphans:allowOrphans];
         CGSize total = CGSizeZero;
-        total.height = [lines count] * font.lineHeight + ([lines count] - 1) * round(font.pointSize * lineSpacing);
+        total.height = lines.count * font.lineHeight + (lines.count - 1) * round(font.pointSize * lineSpacing);
         CGPoint offset = rect.origin;
         for (NSString *line in lines)
         {
@@ -758,7 +756,7 @@
            alignment:(NSTextAlignment)alignment
          lineSpacing:(CGFloat)lineSpacing
     characterSpacing:(CGFloat)characterSpacing
-        kerningTable:(NSDictionary *)kerningTable
+        kerningTable:(NSDictionary<NSString *, NSNumber *> *)kerningTable
         allowOrphans:(BOOL)allowOrphans
 {
     return [self FXLabel_drawInRect:rect
@@ -775,7 +773,6 @@
 @end
 
 
-IB_DESIGNABLE
 @interface FXLabel ()
 
 @property (nonatomic, assign) NSUInteger minSamples;
@@ -799,7 +796,7 @@ IB_DESIGNABLE
     _allowOrphans = YES;
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame]))
     {
@@ -809,7 +806,7 @@ IB_DESIGNABLE
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     if ((self = [super initWithCoder:aDecoder]))
     {
@@ -856,7 +853,7 @@ IB_DESIGNABLE
 
 - (UIColor *)gradientStartColor
 {
-    return [self.gradientColors firstObject];
+    return self.gradientColors.firstObject;
 }
 
 - (void)setGradientStartColor:(UIColor *)color
@@ -865,7 +862,7 @@ IB_DESIGNABLE
     {
         self.gradientColors = nil;
     }
-    else if ([self.gradientColors count] < 2)
+    else if (self.gradientColors.count < 2)
     {
         self.gradientColors = @[color, color];
     }
@@ -879,7 +876,7 @@ IB_DESIGNABLE
 
 - (UIColor *)gradientEndColor
 {
-    return [self.gradientColors lastObject];
+    return self.gradientColors.lastObject;
 }
 
 - (void)setGradientEndColor:(UIColor *)color
@@ -888,19 +885,19 @@ IB_DESIGNABLE
     {
         self.gradientColors = nil;
     }
-    else if ([self.gradientColors count] < 2)
+    else if (self.gradientColors.count < 2)
     {
         self.gradientColors = @[color, color];
     }
-    else if ([self.gradientColors lastObject] != color)
+    else if (self.gradientColors.lastObject != color)
     {
         NSMutableArray *colors = [NSMutableArray arrayWithArray:self.gradientColors];
-        colors[[colors count] - 1] = color;
+        colors[colors.count - 1] = color;
         self.gradientColors = colors;
     }
 }
 
-- (void)setGradientColors:(NSArray *)colors
+- (void)setGradientColors:(NSArray<UIColor *> *)colors
 {
     if (_gradientColors != colors)
     {
@@ -955,7 +952,7 @@ IB_DESIGNABLE
     }
 }
 
-- (void)setKerningTable:(NSDictionary *)kerningTable
+- (void)setKerningTable:(NSDictionary<NSString *, NSNumber *> *)kerningTable
 {
     if (_kerningTable != kerningTable)
     {
@@ -1128,7 +1125,7 @@ IB_DESIGNABLE
     (self.innerShadowBlur > 0.0f || !CGSizeEqualToSize(self.innerShadowOffset, CGSizeZero));
     
     BOOL hasBackgroundImage = CGColorGetPattern(self.backgroundColor.CGColor) != NULL;
-    BOOL hasGradient = [self.gradientColors count] > 1;
+    BOOL hasGradient = self.gradientColors.count > 1;
     BOOL needsMask = hasInnerShadow || hasGradient;
     
     //get context
@@ -1240,7 +1237,7 @@ IB_DESIGNABLE
         if (hasGradient)
         {
             //create array of pre-blended CGColors
-            NSMutableArray *colors = [NSMutableArray arrayWithCapacity:[self.gradientColors count]];
+            NSMutableArray *colors = [NSMutableArray arrayWithCapacity:self.gradientColors.count];
             for (UIColor *color in self.gradientColors)
             {
                 UIColor *blended = [self FXLabel_color:color.CGColor blendedWithColor:textColor.CGColor];
@@ -1257,7 +1254,7 @@ IB_DESIGNABLE
             CGPoint endPoint = CGPointMake(textRect.origin.x + self.gradientEndPoint.x * textRect.size.width,
                                            textRect.origin.y + self.gradientEndPoint.y * textRect.size.height);
             CGContextDrawLinearGradient(context, gradient, startPoint, endPoint,
-                                        kCGGradientDrawsAfterEndLocation | kCGGradientDrawsBeforeStartLocation);
+                                        (CGGradientDrawingOptions)(kCGGradientDrawsAfterEndLocation | kCGGradientDrawsBeforeStartLocation));
             CGGradientRelease(gradient);
             CGContextRestoreGState(context);
         }

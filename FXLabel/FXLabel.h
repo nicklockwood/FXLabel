@@ -1,7 +1,7 @@
 //
 //  FXLabel.h
 //
-//  Version 1.5.8
+//  Version 1.5.9
 //
 //  Created by Nick Lockwood on 20/08/2011.
 //  Copyright 2011 Charcoal Design
@@ -38,32 +38,40 @@
 #import <UIKit/UIKit.h>
 
 
+#ifndef IB_DESIGNABLE
+#define IB_DESIGNABLE
+#endif
+
+
+NS_ASSUME_NONNULL_BEGIN
+
+
 @interface NSString (FXLabelDrawing)
 
 - (CGSize)sizeWithFont:(UIFont *)font
            minFontSize:(CGFloat)minFontSize
-        actualFontSize:(CGFloat *)actualFontSize
+        actualFontSize:(nullable CGFloat *)actualFontSize
               forWidth:(CGFloat)width
          lineBreakMode:(NSLineBreakMode)lineBreakMode
       characterSpacing:(CGFloat)characterSpacing
-          kerningTable:(NSDictionary *)kerningTable;
+          kerningTable:(nullable NSDictionary<NSString *, NSNumber *> *)kerningTable;
 
 - (CGSize)drawAtPoint:(CGPoint)point
              forWidth:(CGFloat)width
              withFont:(UIFont *)font
           minFontSize:(CGFloat)minFontSize
-       actualFontSize:(CGFloat *)actualFontSize
+       actualFontSize:(nullable CGFloat *)actualFontSize
         lineBreakMode:(NSLineBreakMode)lineBreakMode
    baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment
      characterSpacing:(CGFloat)characterSpacing
-         kerningTable:(NSDictionary *)kerningTable;
+         kerningTable:(nullable NSDictionary<NSString *, NSNumber *> *)kerningTable;
 
 - (CGSize)sizeWithFont:(UIFont *)font
      constrainedToSize:(CGSize)size
          lineBreakMode:(NSLineBreakMode)lineBreakMode
            lineSpacing:(CGFloat)lineSpacing
       characterSpacing:(CGFloat)characterSpacing
-          kerningTable:(NSDictionary *)kerningTable
+          kerningTable:(nullable NSDictionary<NSString *, NSNumber *> *)kerningTable
           allowOrphans:(BOOL)allowOrphans;
 
 - (CGSize)drawInRect:(CGRect)rect
@@ -72,20 +80,20 @@
            alignment:(NSTextAlignment)alignment
          lineSpacing:(CGFloat)lineSpacing
     characterSpacing:(CGFloat)characterSpacing
-        kerningTable:(NSDictionary *)kerningTable
+        kerningTable:(nullable NSDictionary<NSString *, NSNumber *> *)kerningTable
         allowOrphans:(BOOL)allowOrphans;
 @end
 
 
-@interface FXLabel : UILabel
+IB_DESIGNABLE @interface FXLabel : UILabel
 
 @property (nonatomic) CGFloat shadowBlur;
 @property (nonatomic) CGFloat innerShadowBlur;
 @property (nonatomic) CGSize innerShadowOffset;
-@property (nonatomic, strong) UIColor *innerShadowColor;
-@property (nonatomic, strong) UIColor *gradientStartColor;
-@property (nonatomic, strong) UIColor *gradientEndColor;
-@property (nonatomic, copy) NSArray *gradientColors;
+@property (nonatomic, strong, nullable) UIColor *innerShadowColor;
+@property (nonatomic, strong, nullable) UIColor *gradientStartColor;
+@property (nonatomic, strong, nullable) UIColor *gradientEndColor;
+@property (nonatomic, copy, nullable) NSArray<UIColor *> *gradientColors;
 @property (nonatomic) CGPoint gradientStartPoint;
 @property (nonatomic) CGPoint gradientEndPoint;
 @property (nonatomic) NSUInteger oversampling;
@@ -93,12 +101,15 @@
 @property (nonatomic) CGFloat lineSpacing;
 @property (nonatomic) CGFloat characterSpacing;
 @property (nonatomic) CGFloat baselineOffset;
-@property (nonatomic, copy) NSDictionary *kerningTable;
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, NSNumber *> *kerningTable;
 @property (nonatomic) BOOL allowOrphans;
 
 - (void)setUp;
 
 @end
+
+
+NS_ASSUME_NONNULL_END
 
 
 #pragma GCC diagnostic pop

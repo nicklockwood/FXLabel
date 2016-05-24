@@ -1,3 +1,11 @@
+NOTE about iOS 7
+-----------------
+
+iOS 7 introduced TextKit a new, more powerful text rendering framework that makes much of FXLabel's drawing API and rendering system obsolete. FXLabel deliberately maintains the same rendering behavior as iOS 6 for backwards compatibility reasons, but unless you still need to support iOS 6, it would be better to create text effects on top of TextKit instead.
+
+FXLabel also does not support attributed strings / rich text, introduced to UILabel in iOS 6.
+
+
 Purpose
 --------------
 
@@ -11,8 +19,8 @@ FXLabel also provides more control over layout options such as leading (line spa
 Supported iOS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 7.1 (Xcode 5.1, Apple LLVM compiler 5.1)
-* Earliest supported deployment target - iOS 5.0
+* Supported build target - iOS 9.3 (Xcode 7.3, Apple LLVM compiler 7.1)
+* Earliest supported deployment target - iOS 7.0
 * Earliest compatible deployment target - iOS 4.3
 
 NOTE: 'Supported' means that the library has been tested with this version. 'Compatible' means that the library should work on this iOS version (i.e. it doesn't rely on any unavailable SDK features) but is no longer being tested for compatibility and may require tweaking or bug fixes to run correctly.
@@ -171,6 +179,12 @@ The gradientColor properties do not support patterned, indexed or HSV colours.
 
 Release notes:
 -------------------
+
+Version 1.5.9
+
+- Fixed warnings on Xcode 7.3
+- Added IB_DESIGNABLE annotation
+- Added nullability and lightweight generics
 
 Version 1.5.8
 
